@@ -1,0 +1,64 @@
+package com.danjam.payment;
+
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+@Service
+@RequiredArgsConstructor
+public class PaymentService {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private static final String TOSS_API_URL = "https://api.tosspayments.com/v1/payments/confirm";
+
+    private final PaymentRepository paymentRepository;
+
+    @Value("${payments.toss.secret.key}")
+    private String widgetSecretKey;
+
+    public void confirmPayment(PaymentRequestDTO paymentRequestDTO) {
+        // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
+        // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", getEncodedAuthHeader());
+        headers.set("Content-Type", "application/json");
+
+        HttpEntity<PaymentRequestDTO> request = new HttpEntity<>(paymentRequestDTO, headers);
+
+        // 결제를 승인하면 결제수단에서 금액이 차감돼요.
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<PaymentResponseDTO> response = restTemplate.exchange(
+                TOSS_API_URL,
+                HttpMethod.POST,
+                request,
+                PaymentResponseDTO.class
+        );
+
+        PaymentResponseDTO paymentResponseDTO = response.getBody();
+        log.info("paymentResponseDTO: {}", paymentResponseDTO);
+        if (paymentResponseDTO != null) {
+            Payment payment = paymentResponseDTO.toEntity();
+            Payment savedPayment = paymentRepository.save(payment);
+            log.info("savedPayment: {}", savedPayment);
+        }
+    }
+
+    private String getEncodedAuthHeader() {
+        String auth = widgetSecretKey + ":";
+        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8));
+
+        return "Basic " + new String(encodedAuth);
+    }
+}
