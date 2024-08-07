@@ -45,13 +45,13 @@ public class SecurityConfig {
                                 .anyRequest().authenticated())
                 // formLogin 추가
                 .formLogin(form ->
-                        form
-                                .loginPage("/login")     // front에서 사용하는 로그인 페이지 url
+                                form
+                                        .loginPage("/login")     // front에서 사용하는 로그인 페이지 url
 //                                .usernameParameter("email")
 //                                .passwordParameter("password")
-                                .loginProcessingUrl("/users/auth") // front에서 email+password 작성 받은 후 axios 전달하는 url, 실제로 login 진행됨
-                                .successForwardUrl("/users/authSuccess")
-                                .failureForwardUrl("/users/authFailure")
+                                        .loginProcessingUrl("/users/auth") // front에서 email+password 작성 받은 후 axios 전달하는 url, 실제로 login 진행됨
+                                        .successForwardUrl("/users/authSuccess")
+                                        .failureForwardUrl("/users/authFailure")
 //                                .successHandler(new AuthenticationSuccessHandler() {
 //                                    @Override
 //                                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -72,7 +72,7 @@ public class SecurityConfig {
 //                                        response.sendRedirect("/users/authFailure");
 //                                    }
 //                                })
-                                .permitAll()
+                                        .permitAll()
                 )
                 .logout((logout) ->
                         logout

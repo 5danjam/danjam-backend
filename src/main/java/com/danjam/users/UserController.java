@@ -1,6 +1,7 @@
 package com.danjam.users;
 
 
+import com.danjam.logInSecurity.UserDetail;
 import com.danjam.users.Users;
 import com.danjam.users.UsersDto;
 import com.danjam.users.UsersService;
@@ -81,10 +82,10 @@ public class UserController {
         return resultMap;
     }
 
-    @RequestMapping("auth/authSuccess")
-    public ResponseEntity<Map<String, Object>> authSuccess(Authentication authentication) {
+    @RequestMapping("authSuccess")
+    public ResponseEntity<Map<String, Object>> authSuccess(@AuthenticationPrincipal UserDetail userDetail) {
         HashMap<String, Object> response = new HashMap<>();
-        Users user = (Users) authentication.getPrincipal();
+        Users user = userDetail.getUser();
 
         response.put("result", "success");
         response.put("id", user.getId());
@@ -94,7 +95,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping("auth/authFailure")
+    @RequestMapping("authFailure")
     public ResponseEntity<Map<String, Object>> authFailure() {
         HashMap<String, Object> response = new HashMap<>();
 
