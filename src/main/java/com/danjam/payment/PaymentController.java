@@ -20,9 +20,9 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/confirm")
-    public ResponseEntity<String> confirmPayment(@RequestBody PaymentRequestDTO paymentRequestDTO) {
-        paymentService.confirmPayment(paymentRequestDTO);
+    public ResponseEntity<Payment> confirmPayment(@RequestBody PaymentRequestDTO paymentRequestDTO) {
+        Payment payment = paymentService.confirmPayment(paymentRequestDTO);
 
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        return new ResponseEntity<>(payment, HttpStatus.OK);
     }
 }

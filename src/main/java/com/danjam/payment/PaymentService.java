@@ -27,7 +27,7 @@ public class PaymentService {
     @Value("${payments.toss.secret.key}")
     private String widgetSecretKey;
 
-    public void confirmPayment(PaymentRequestDTO paymentRequestDTO) {
+    public Payment confirmPayment(PaymentRequestDTO paymentRequestDTO) {
         // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
         // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
         HttpHeaders headers = new HttpHeaders();
@@ -50,9 +50,9 @@ public class PaymentService {
         log.info("paymentResponseDTO: {}", paymentResponseDTO);
         if (paymentResponseDTO != null) {
             Payment payment = paymentResponseDTO.toEntity();
-            Payment savedPayment = paymentRepository.save(payment);
-            log.info("savedPayment: {}", savedPayment);
+            return paymentRepository.save(payment);
         }
+        return null;
     }
 
     private String getEncodedAuthHeader() {

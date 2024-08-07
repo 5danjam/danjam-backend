@@ -22,6 +22,7 @@ public record PaymentResponseDTO(
                 .totalAmount(totalAmount)
                 .status(status)
                 .approvedAt(zonedDateTime.toLocalDateTime())
+                .userId(1L)
                 .build();
     }
 }
