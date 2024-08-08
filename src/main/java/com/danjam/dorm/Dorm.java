@@ -1,7 +1,8 @@
-package com.danjam.Dorm;
+package com.danjam.dorm;
 
-import com.danjam.Dcategory.Dcategory;
-import com.danjam.Users.Users;
+import com.danjam.d_category.Dcategory;
+
+import com.danjam.users.Users;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -11,14 +12,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Entity
-@Table(name = "Dorm")
+@Table(name = "dorm")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Dorm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 댓글 고유
+    private Long id;
 
     private String name;
 

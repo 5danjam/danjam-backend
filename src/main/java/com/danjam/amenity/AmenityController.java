@@ -1,4 +1,4 @@
-package com.danjam.Dcategory;
+package com.danjam.amenity;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,17 +11,18 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-public class DcategoryController {
+public class AmenityController {
 
-    private final DcategoryServiceImpl DCATEGORYSERVICE;
+    private final AmenityServiceImpl AMENITYSERVICE;
 
-    @GetMapping("/dcategory/list")
+    @GetMapping("/amenity/list")
     public HashMap<String, Object> list(){
         HashMap<String, Object> resultMap = new HashMap();
-        List<DcategoryListDTO> dcategoryList = DCATEGORYSERVICE.list();
+        List<AmenityListDTO> amenityList = AMENITYSERVICE.list();
+        System.out.println("list 입성"+amenityList);
 
         try {
-            resultMap.put("dcategoryList", dcategoryList);
+            resultMap.put("amenityList", amenityList);
             resultMap.put("result", "success");
 
         } catch (Exception e) {

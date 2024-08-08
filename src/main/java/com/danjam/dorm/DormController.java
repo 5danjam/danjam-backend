@@ -1,4 +1,4 @@
-package com.danjam.Dorm;
+package com.danjam.dorm;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ public class DormController {
     private final DormServiceImpl DORMSERVICE;
 
     @PostMapping("/dorm/insert")
-    public HashMap<String, Object> write(@RequestBody DormAddDTO dormAddDTO) {
+    public HashMap<String, Object> insert(@RequestBody DormAddDTO dormAddDTO) {
 
         HashMap<String, Object> resultMap = new HashMap();
 

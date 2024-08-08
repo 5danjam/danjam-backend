@@ -1,4 +1,4 @@
-package com.danjam.Dcategory;
+package com.danjam.amenity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,11 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @Entity
-@Table(name = "d_category")
+@Table(name = "amenity")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Dcategory {
+public class Amenity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 댓글 고유
@@ -18,7 +19,7 @@ public class Dcategory {
     private String name;
 
     @Builder
-    public Dcategory(Long id , String name){
+    public Amenity(Long id , String name){
         this.id = id;
         this.name = name;
 

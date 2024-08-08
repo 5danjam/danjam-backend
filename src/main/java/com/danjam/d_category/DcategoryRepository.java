@@ -1,7 +1,6 @@
-package com.danjam.Dcategory;
+package com.danjam.d_category;
 
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.danjam.Dcategory;
+package com.danjam.amenity;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,23 +10,24 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DcategoryServiceImpl implements DcategoryService {
+public class AmenityServiceImpl implements AmenityService {
 
-    private final DcategoryRepository DCATEGORYREPOSITORY;
+    private final AmenityRepository AMENITYREPOSITORY;
 
     @Override
-    public List<DcategoryListDTO> list() {
+    public List<AmenityListDTO> list() {
 
-        List<Dcategory> dcategories = DCATEGORYREPOSITORY.findAll();
+        List<Amenity> amenities = AMENITYREPOSITORY.findAll();
 
-        return dcategories.stream()
-                .map(dcategorie -> DcategoryListDTO.builder()
+        return amenities.stream()
+                .map(dcategorie -> AmenityListDTO.builder()
                 .id(dcategorie.getId())
                 .name(dcategorie.getName())
                 .build())
                 .collect(Collectors.toList());
 
     }
+
 
 }
 

@@ -1,9 +1,9 @@
-package com.danjam.Dorm;
+package com.danjam.dorm;
 
-import com.danjam.Dcategory.Dcategory;
-import com.danjam.Users.Users;
-import com.danjam.Dcategory.DcategoryRepository;
-import com.danjam.Users.UsersRepository;
+import com.danjam.d_category.Dcategory;
+import com.danjam.users.Users;
+import com.danjam.d_category.DcategoryRepository;
+import com.danjam.users.UsersRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,4 +44,5 @@ public class DormServiceImpl implements DormService {
 
        return DORMREPOSITORY.save(dorm).getId();
     }
+
 }

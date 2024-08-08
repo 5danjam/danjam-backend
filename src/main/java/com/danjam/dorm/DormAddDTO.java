@@ -1,7 +1,7 @@
-package com.danjam.Dorm;
+package com.danjam.dorm;
 
-import com.danjam.Dcategory.Dcategory;
-import com.danjam.Users.Users;
+import com.danjam.d_category.Dcategory;
+import com.danjam.users.Users;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

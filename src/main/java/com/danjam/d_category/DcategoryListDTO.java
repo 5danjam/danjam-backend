@@ -1,4 +1,4 @@
-package com.danjam.Dcategory;
+package com.danjam.d_category;
 
 import lombok.*;
 

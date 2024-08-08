@@ -1,4 +1,4 @@
-package com.danjam.Users;
+package com.danjam.users;
 
 import jakarta.persistence.*;
 import lombok.*;

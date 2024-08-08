@@ -1,4 +1,4 @@
-package com.danjam.Dorm;
+package com.danjam.dorm;
 
 public interface DormService {
 
