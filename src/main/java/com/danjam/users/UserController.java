@@ -71,7 +71,7 @@ public class UserController {
 
         response.put("result", "success");
         response.put("id", user.getId());
-        response.put("nickname", user.getName());
+        response.put("name", user.getName());
         response.put("role", user.getRole());
 
         return ResponseEntity.ok(response);
@@ -82,6 +82,14 @@ public class UserController {
         HashMap<String, Object> response = new HashMap<>();
 
         response.put("result", "fail");
+        return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping("logoutSuccess")
+    public ResponseEntity<Map<String, Object>> logoutSuccess() {
+        HashMap<String, Object> response = new HashMap<>();
+
+        response.put("result", "success");
         return ResponseEntity.ok(response);
     }
 }
