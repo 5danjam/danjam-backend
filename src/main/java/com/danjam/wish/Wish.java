@@ -1,4 +1,4 @@
-package com.danjam.like;
+package com.danjam.wish;
 
 import com.danjam.dorm.Dorm;
 import com.danjam.users.Users;
@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @ToString
-@Table(name = "like")
+@Table(name = "wish")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -33,7 +33,7 @@ public class Like {
     private LocalDateTime createdAt;
 
     @Builder
-    public Like(long id, Users users, Dorm dorm, LocalDateTime createdAt) {
+    public Wish(long id, Users users, Dorm dorm, LocalDateTime createdAt) {
         this.id = id;
         this.users = users;
         this.dorm = dorm;

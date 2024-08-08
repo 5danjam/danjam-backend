@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RtagDto {
-    private long id;
+    private Long id;
     private Review review;
     private Tag tag;
 

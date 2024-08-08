@@ -1,4 +1,4 @@
-package com.danjam.like;
+package com.danjam.wish;
 
 import com.danjam.dorm.Dorm;
 import com.danjam.users.Users;
@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LikeDto {
-    private long id;
+public class WishDto {
+    private Long id;
     private Users users;
     private Dorm dorm;
     private LocalDateTime createdAt;
 
-    public Like toEntity() {
-        return Like.builder()
+    public Wish toEntity() {
+        return Wish.builder()
                 .users(users)
                 .dorm(dorm)
                 .createdAt(createdAt)

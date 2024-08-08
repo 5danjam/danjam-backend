@@ -8,14 +8,13 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @ToString
 @Table(name = "tag")
-@DynamicInsert // default
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;
+    private Long id;
 
     private String name;
 

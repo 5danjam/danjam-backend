@@ -10,14 +10,13 @@ import org.hibernate.annotations.DynamicInsert;
 @Getter
 @ToString
 @Table(name = "r_tag")
-@DynamicInsert // default
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rtag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")

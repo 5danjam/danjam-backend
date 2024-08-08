@@ -15,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingDto {
-    private long id;
+    private Long id;
     private Users users;
     private Room room;
     private Payment payment;
