@@ -1,14 +1,12 @@
 package com.danjam.amenity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Data
 @Entity
+@ToString
 @Table(name = "amenity")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Amenity {

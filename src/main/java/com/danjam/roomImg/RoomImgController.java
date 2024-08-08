@@ -1,6 +1,7 @@
 package com.danjam.roomImg;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,7 +76,4 @@ public class RoomImgController {
 
         return resultMap;
     }
-
-
-
 }

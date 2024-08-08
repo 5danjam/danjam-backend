@@ -34,6 +34,5 @@ public class DamenityServiceImpl implements DamenityService {
 
             DAMENITYREPOSITORY.save(damenity);
         }
-
     }
 }

@@ -3,13 +3,11 @@ package com.danjam.d_amenity;
 import com.danjam.amenity.Amenity;
 import com.danjam.dorm.Dorm;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
+@ToString
 @Table(name = "d_amenity")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Damenity {

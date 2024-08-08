@@ -35,5 +35,4 @@ public class RoomImgServiceImpl implements RoomImgService {
         // RoomImg 엔티티를 데이터베이스에 저장합니다.
         return ROOMIMGREPOSITORY.save(roomImg).getId();
     }
-
 }

@@ -17,7 +17,7 @@ public class DormAddDTO {
 
     private String description;
 
-    private String contact_num;
+    private String contactNum;
 
     private String city;
 
@@ -33,16 +33,19 @@ public class DormAddDTO {
 
     private Long usersId;
 
+    private String status;
+
     public Dorm toEntity(){
         return Dorm.builder()
                 .name(name)
                 .description(description)
-                .contact_num(contact_num)
+                .contactNum(contactNum)
                 .city(city)
                 .town(town)
                 .address(address)
                 .user(user)
                 .dcategory(dcategory)
+                .status(status)
                 .build();
     }
 

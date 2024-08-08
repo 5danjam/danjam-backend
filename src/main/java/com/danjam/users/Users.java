@@ -7,10 +7,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Getter
+@ToString
 @Table(name = "users")
 @DynamicInsert // default
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,26 +40,26 @@ public class Users {
 
     @Column(name = "created_at")
     @CreationTimestamp
-    private Date createDate;
+    private LocalDateTime createAt;
 
     @Column(name = "updated_at")
     @UpdateTimestamp
-    private Date updateDate;
+    private LocalDateTime updateAt;
 
     @Column(name = "status")
     @ColumnDefault("Y")
     private String status;
 
     @Builder
-    public Users(int id, String email, String password, String name, int phoneNum, Role role, Date createDate, Date updateDate, String status) {
+    public Users(int id, String email, String password, String name, int phoneNum, Role role, LocalDateTime createAt, LocalDateTime updateAt, String status) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNum = phoneNum;
         this.role = role;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
         this.status = status;
     }
 

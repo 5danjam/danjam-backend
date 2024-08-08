@@ -4,19 +4,19 @@ import com.danjam.d_category.Dcategory;
 
 import com.danjam.users.Users;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Entity
+@ToString
 @Table(name = "dorm")
+@DynamicInsert // default
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class Dorm {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +25,8 @@ public class Dorm {
 
     private String description;
 
-    private String contact_num;
+    @Column(name = "contact_num")
+    private String contactNum;
 
     private String city;
 
@@ -41,15 +42,19 @@ public class Dorm {
     @JoinColumn(name = "seller_id")
     private Users user; // 판매자
 
+    @ColumnDefault("N")
+    private String status;
+
     @Builder
-    public Dorm(String name, String description, String contact_num, String city, String town, String address, Users user, Dcategory dcategory) {
+    public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status) {
         this.name = name;
         this.description = description;
-        this.contact_num = contact_num;
+        this.contactNum = contactNum;
         this.city = city;
         this.town = town;
         this.address = address;
         this.user = user;
         this.dcategory = dcategory;
+        this.status = status;
     }
 }

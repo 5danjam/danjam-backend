@@ -27,7 +27,5 @@ public class AmenityServiceImpl implements AmenityService {
                 .collect(Collectors.toList());
 
     }
-
-
 }
 
