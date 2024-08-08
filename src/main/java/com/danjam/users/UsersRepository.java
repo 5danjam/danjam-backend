@@ -1,12 +1,17 @@
 package com.danjam.users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
-public interface UsersRepository extends JpaRepository<Users,Long> {
+@Repository
+public interface UsersRepository extends JpaRepository<Users, Long> {
+    Users save(Users users);
 
-    @Override
-    Optional<Users> findById(Long userId);
+    Users findByEmailAndPassword(String email, String password);
 
+    List<Users> findAll();
+
+    Users findByEmail(String email);
 }
