@@ -21,4 +21,13 @@ public class UsersService {
     }
 
     public Users findByEmail(String email) {return usersRepository.findByEmail(email);}
+
+    public Users findById(long id) {
+        return usersRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    public void cancel(long id) {
+        usersRepository.cancel(id);
+    }
 }

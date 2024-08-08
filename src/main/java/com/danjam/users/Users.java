@@ -11,6 +11,7 @@ import java.util.Date;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "users")
 @DynamicInsert // default
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,7 +19,7 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;
+    private Long id;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -49,7 +50,7 @@ public class Users {
     private String status;
 
     @Builder
-    public Users(int id, String email, String password, String name, int phoneNum, Role role, Date createDate, Date updateDate, String status) {
+    public Users(Long id, String email, String password, String name, int phoneNum, Role role, Date createDate, Date updateDate, String status) {
         this.id = id;
         this.email = email;
         this.password = password;
