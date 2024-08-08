@@ -8,7 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -35,14 +35,14 @@ public class Booking {
     private Payment payment;
 
     private int person;
-    private Date check_in;
-    private Date check_out;
+    private LocalDate check_in;
+    private LocalDate check_out;
     @ColumnDefault("N")
     private String status;
 
 
     @Builder
-    public Booking(Long id, Users users, Room room, Payment payment, int person, Date check_in, Date check_out, String status) {
+    public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDate check_in, LocalDate check_out, String status) {
         this.id = id;
         this.users = users;
         this.room = room;
