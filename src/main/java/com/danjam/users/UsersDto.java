@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -18,8 +19,8 @@ public class UsersDto {
     private int phoneNum;
     private Role role;
     private String status;
-    private Date createDate;
-    private Date updateDate;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
 
     @Builder
     public UsersDto(Long id, String email, String name, int phoneNum) {
@@ -38,8 +39,8 @@ public class UsersDto {
                 .phoneNum(phoneNum)
                 .role(role)
                 .status(status)
-                .createDate(createDate)
-                .updateDate(updateDate)
+                .createAt(createAt)
+                .updateAt(updateAt)
                 .build();
     }
 

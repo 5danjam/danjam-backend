@@ -57,29 +57,11 @@ public class UserController {
     public HashMap<String, Object> signUp(@RequestBody UsersDto usersDto) {
         HashMap<String, Object> resultMap = new HashMap<>();
         System.out.println("회원가입 접속");
-        System.out.println(usersDto.getName());
-        System.out.println(usersDto.getPassword());
-        System.out.println(usersDto.getEmail());
-        System.out.println(usersDto.getPhoneNum());
-
-        // 중복 검사
-        List<Users> list = usersService.findAll();
-        for (Users user : list) {
-            if(user.getEmail().equals(usersDto.getEmail())) {
-                resultMap.put("result", "fail");
-                return resultMap;
-            }
-        }
 
         try{
             usersDto.setPassword(passwordEncoder.encode(usersDto.getPassword()));
-            Users users = usersDto.toEntity();
             System.out.println("회원가입 성공");
-            System.out.println(users.getName());
-            System.out.println(users.getPassword());
-            System.out.println(users.getEmail());
-            System.out.println(users.getPhoneNum());
-            usersService.save(users);
+            usersService.save(usersDto.toEntity());
             resultMap.put("result", "success");
         }catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +77,7 @@ public class UserController {
 
         response.put("result", "success");
         response.put("id", user.getId());
-        response.put("nickname", user.getName());
+        response.put("name", user.getName());
         response.put("role", user.getRole());
 
         return ResponseEntity.ok(response);
@@ -106,6 +88,14 @@ public class UserController {
         HashMap<String, Object> response = new HashMap<>();
 
         response.put("result", "fail");
+        return ResponseEntity.ok(response);
+    }
+
+    @RequestMapping("logoutSuccess")
+    public ResponseEntity<Map<String, Object>> logoutSuccess() {
+        HashMap<String, Object> response = new HashMap<>();
+
+        response.put("result", "success");
         return ResponseEntity.ok(response);
     }
 
