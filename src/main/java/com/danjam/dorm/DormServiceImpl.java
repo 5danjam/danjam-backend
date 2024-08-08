@@ -20,9 +20,8 @@ public class DormServiceImpl implements DormService {
     private final DcategoryRepository DCATEGORYREPOSITORY;
 
     @Transactional
-    public Long insert(DormAddDTO dormAddDTO){
-
-
+    @Override
+    public Long insert(DormAddDTO dormAddDTO) {
         Optional<Users> usersOptional = USERSREPOSITORY.findById(dormAddDTO.getUsersId());
         Optional<Dcategory> dCategoryOptional = DCATEGORYREPOSITORY.findById(dormAddDTO.getCategoryId());
 
@@ -37,12 +36,11 @@ public class DormServiceImpl implements DormService {
                 .city(dormAddDTO.getCity())
                 .town(dormAddDTO.getTown())
                 .address(dormAddDTO.getAddress())
-                .contact_num(dormAddDTO.getContact_num())
+                .contactNum(dormAddDTO.getContactNum())
                 .dcategory(dcategory)
                 .user(user)
                 .build();
 
        return DORMREPOSITORY.save(dorm).getId();
     }
-
 }

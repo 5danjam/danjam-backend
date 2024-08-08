@@ -4,21 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsersDto {
-    private int id;
+    private Long id;
     private String email;
     private String password;
     private String name;
     private int phoneNum;
     private Role role;
     private String status;
-    private Date createDate;
-    private Date updateDate;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
 
     public Users toEntity() {
         return Users.builder()
@@ -29,8 +30,8 @@ public class UsersDto {
                 .phoneNum(phoneNum)
                 .role(role)
                 .status(status)
-                .createDate(createDate)
-                .updateDate(updateDate)
+                .createAt(createAt)
+                .updateAt(updateAt)
                 .build();
     }
 }

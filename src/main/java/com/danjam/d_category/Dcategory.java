@@ -1,13 +1,11 @@
 package com.danjam.d_category;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
+@ToString
 @Table(name = "d_category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dcategory {

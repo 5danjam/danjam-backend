@@ -14,7 +14,7 @@ public class RoomImgAddDTO {
 
     private String name;
 
-    private String name_original;
+    private String nameOriginal;
 
     private String size;
 
@@ -27,7 +27,7 @@ public class RoomImgAddDTO {
     public RoomImg toEntity(){
         return RoomImg.builder()
                 .name(name)
-                .name_original(name_original)
+                .nameOriginal(nameOriginal)
                 .size(size)
                 .ext(ext)
                 .room(room)

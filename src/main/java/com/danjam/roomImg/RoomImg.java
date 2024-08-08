@@ -2,14 +2,12 @@ package com.danjam.roomImg;
 
 import com.danjam.room.Room;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Entity
+@ToString
 @Table(name = "room_img")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
@@ -21,7 +19,8 @@ public class RoomImg {
 
     private String name;
 
-    private String name_original;
+    @Column(name = "name_original")
+    private String nameOriginal;
 
     private String size;
 
@@ -32,9 +31,9 @@ public class RoomImg {
     private Room room;
 
     @Builder
-    public RoomImg(String name, String name_original, String size, String ext, Room room) {
+    public RoomImg(String name, String nameOriginal, String size, String ext, Room room) {
         this.name = name;
-        this.name_original = name_original;
+        this.nameOriginal = nameOriginal;
         this.size = size;
         this.ext = ext;
         this.room = room;
