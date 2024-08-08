@@ -27,7 +27,7 @@ public class RoomImgServiceImpl implements RoomImgService {
         RoomImg roomImg = RoomImg.builder()
                 .room(room) // 관계가 설정된 경우
                 .name(roomImgAddDTO.getName()) // UUID
-                .name_original(roomImgAddDTO.getName_original()) // 원본 파일 이름
+                .nameOriginal(roomImgAddDTO.getNameOriginal()) // 원본 파일 이름
                 .size(roomImgAddDTO.getSize()) // 파일 크기
                 .ext(roomImgAddDTO.getExt()) // 파일 확장자
                 .build();

@@ -35,21 +35,26 @@ public class Booking {
     private Payment payment;
 
     private int person;
-    private LocalDate check_in;
-    private LocalDate check_out;
+
+    @Column(name = "check_in")
+    private LocalDate checkIn;
+
+    @Column(name = "check_out")
+    private LocalDate checkOut;
+
     @ColumnDefault("N")
     private String status;
 
 
     @Builder
-    public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDate check_in, LocalDate check_out, String status) {
+    public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDate checkIn, LocalDate checkOut, String status) {
         this.id = id;
         this.users = users;
         this.room = room;
         this.payment = payment;
         this.person = person;
-        this.check_in = check_in;
-        this.check_out = check_out;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
         this.status = status;
     }
 }

@@ -31,8 +31,8 @@ public class BookingDto {
                 .room(room)
                 .payment(payment)
                 .person(person)
-                .check_in(checkIn)
-                .check_out(checkOut)
+                .checkIn(checkIn)
+                .checkOut(checkOut)
                 .status(status)
                 .build();
     }

@@ -61,7 +61,7 @@ public class RoomImgController {
                 RoomImgAddDTO roomImgAddDTO = new RoomImgAddDTO();
                 roomImgAddDTO.setRoomId(roomId);
                 roomImgAddDTO.setName(uuid); // UUID
-                roomImgAddDTO.setName_original(originalFileName); // Original filename
+                roomImgAddDTO.setNameOriginal(originalFileName); // Original filename
                 roomImgAddDTO.setSize(String.valueOf(fileSize)); // File size
                 roomImgAddDTO.setExt(extension); // File extension
                 System.out.println("roomImgAddDTO: " + roomImgAddDTO);
