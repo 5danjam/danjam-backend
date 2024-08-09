@@ -2,19 +2,24 @@ package com.danjam.room;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
+@RequestMapping("/room/")
 public class RoomController {
 
     private final RoomServiceImpl ROOMSERVICE;
 
-    @PostMapping("/room/insert")
+    @PostMapping("insert")
     public HashMap<String, Object> insert(@RequestBody RoomAddDTO roomAddDTO) {
 
         HashMap<String, Object> resultMap = new HashMap();

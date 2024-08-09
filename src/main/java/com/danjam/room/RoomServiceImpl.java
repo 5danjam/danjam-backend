@@ -2,11 +2,15 @@ package com.danjam.room;
 
 import com.danjam.dorm.Dorm;
 import com.danjam.dorm.DormRepository;
+import com.danjam.roomImg.RoomImgDTO;
+import com.danjam.roomImg.RoomImgRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -15,6 +19,7 @@ public class RoomServiceImpl implements RoomService {
 
     private final DormRepository DORMREPOSITORY;
     private final RoomRepository ROOMREPOSITORY;
+    private final RoomImgRepository ROOMIMGREPOSITORY;
 
 
     @Transactional
@@ -34,5 +39,16 @@ public class RoomServiceImpl implements RoomService {
                 .build();
 
        return ROOMREPOSITORY.save(room).getId();
+    }
+
+    public RoomDTO getRoomDTO(Long roomId) {
+        Room room = ROOMREPOSITORY.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Room"));
+
+        List<RoomImgDTO> roomImages = ROOMIMGREPOSITORY.findByRoom(room).stream()
+                .map(RoomImgDTO::new)
+                .collect(Collectors.toList());
+
+        return new RoomDTO(room, roomImages);
     }
 }
