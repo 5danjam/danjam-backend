@@ -62,11 +62,22 @@ public class DormServiceImpl implements DormService {
     }
 
     @Transactional(readOnly = true)
-    public Page<DormDTO> searchDorms(Pageable pageable) {
-        Page<Dorm> dorms = DORMREPOSITORY.findAll(pageable);
+    public Page<DormDTO> searchDorms(Pageable pageable, String city, Integer person, Integer minPrice, Integer maxPrice, String type) {
+        Page<Dorm> dorms;
+
+        if (city != null || person != null || minPrice != null || maxPrice != null || type != null) {
+            dorms = DORMREPOSITORY.findAll(pageable);
+        } else {
+            dorms = DORMREPOSITORY.findAll(pageable);
+        }
 
         return dorms.map(dorm -> {
-            List<Room> rooms = ROOMREPOSITORY.findByDorm(dorm);
+            List<Room> rooms = ROOMREPOSITORY.findByDorm(dorm).stream()
+                    .filter(room -> (person == null || room.getPerson() >= person) &&
+                            (minPrice == null || room.getPrice() >= minPrice) &&
+                            (maxPrice == null || room.getPrice() <= maxPrice) &&
+                            (type == null || room.getType().equals(type)))
+                    .toList();
 
             List<RoomDTO> roomDTOs = rooms.stream()
                     .map(room -> {
@@ -78,7 +89,6 @@ public class DormServiceImpl implements DormService {
                     .collect(Collectors.toList());
 
             Double averageRating = REVIEWREPOSITORY.findAverageRatingByDormId(dorm.getId());
-
             Integer lowestPrice = ROOMREPOSITORY.findLowestRoomPriceByDormId(dorm.getId());
 
             return new DormDTO(dorm, averageRating, lowestPrice, roomDTOs);

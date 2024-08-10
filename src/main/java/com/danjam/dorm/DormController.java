@@ -44,7 +44,7 @@ public class DormController {
                                                   @RequestParam(value = "maxPrice", required = false) Integer maxPrice,
                                                   @RequestParam(value = "type", required = false) String type,
                                                   Pageable pageable) {
-        Page<DormDTO> dorms = DORMSERVICE.searchDorms(pageable);
+        Page<DormDTO> dorms = DORMSERVICE.searchDorms(pageable, city, person, minPrice, maxPrice, type);
         return ResponseEntity.ok(dorms);
     }
 }
