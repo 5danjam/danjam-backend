@@ -3,6 +3,7 @@ package com.danjam.booking;
 import com.danjam.payment.Payment;
 import com.danjam.room.Room;
 import com.danjam.users.Users;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -28,10 +29,13 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
+    @JsonBackReference
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id", unique = true)
     private Payment payment;
 
     private int person;
