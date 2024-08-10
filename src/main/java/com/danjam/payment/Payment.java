@@ -32,7 +32,4 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users users;
-
-//    // TODO : userId 임시방편
-//    private Long userId;
 }
