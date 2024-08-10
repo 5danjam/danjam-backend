@@ -2,12 +2,15 @@ package com.danjam.dorm;
 
 import com.danjam.d_category.Dcategory;
 
+import com.danjam.room.Room;
 import com.danjam.users.Users;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -34,7 +37,7 @@ public class Dorm {
 
     private String address;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Dcategory dcategory; // 카테고리
 
@@ -44,6 +47,9 @@ public class Dorm {
 
     @ColumnDefault("N")
     private String status;
+
+//    @OneToMany(mappedBy = "dorm", fetch = FetchType.LAZY)
+//    private List<Room> rooms;
 
     @Builder
     public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status) {
