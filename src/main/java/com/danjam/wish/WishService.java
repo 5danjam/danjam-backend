@@ -22,13 +22,21 @@ public class WishService {
     public Slice<WishWithSliceResponse> findAllByUsersById(Long id, Pageable pageable) {
         List<WishWithSliceResponse> wishes = wishRepository.findWishes(id, pageable);
 
-        //        boolean hasNext = entities.size() > pageable.getOffset() + pageable.getPageSize();
-        boolean hasNext = wishes.size() > pageable.getPageSize();
+//        boolean hasNext = wishes.size() > pageable.getOffset() + pageable.getPageSize();
+        boolean hasNext = hasNextPage(wishes, pageable.getPageSize());
 
         return new SliceImpl<>(
                 hasNext ? wishes.subList(0, pageable.getPageSize()) : wishes,
                 pageable,
                 hasNext
         );
+    }
+
+    private boolean hasNextPage(List<WishWithSliceResponse> wishes, int pageSize) {
+        if (wishes.size() > pageSize) {
+            wishes.remove(pageSize);
+            return true;
+        }
+        return false;
     }
 }

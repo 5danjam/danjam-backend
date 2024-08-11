@@ -33,6 +33,8 @@ public class WishController {
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
             Pageable pageable) {
         Slice<WishWithSliceResponse> wishResponsePage = wishService.findAllByUsersById(id, pageable);
+        log.info("wishResponsePage.hasNext(): {}", wishResponsePage.hasNext());
+        log.info("wishResponsePage.getSize(): {}", wishResponsePage.getSize());
 
         return new ResponseEntity<>(wishResponsePage, HttpStatus.OK);
     }
