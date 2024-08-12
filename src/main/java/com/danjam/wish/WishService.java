@@ -22,11 +22,10 @@ public class WishService {
     public Slice<WishWithSliceResponse> findAllByUsersById(Long id, Pageable pageable) {
         List<WishWithSliceResponse> wishes = wishRepository.findWishes(id, pageable);
 
-//        boolean hasNext = wishes.size() > pageable.getOffset() + pageable.getPageSize();
         boolean hasNext = hasNextPage(wishes, pageable.getPageSize());
 
         return new SliceImpl<>(
-                hasNext ? wishes.subList(0, pageable.getPageSize()) : wishes,
+                wishes,
                 pageable,
                 hasNext
         );

@@ -4,7 +4,6 @@ import com.danjam.wish.querydsl.WishWithSliceResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -29,12 +28,10 @@ public class WishController {
     @GetMapping("/{id}")
     public ResponseEntity<Slice<WishWithSliceResponse>> getAllWishes(
             @PathVariable Long id,
-            @PageableDefault(size = 2)
+            @PageableDefault(size = 25)
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
             Pageable pageable) {
         Slice<WishWithSliceResponse> wishResponsePage = wishService.findAllByUsersById(id, pageable);
-        log.info("wishResponsePage.hasNext(): {}", wishResponsePage.hasNext());
-        log.info("wishResponsePage.getSize(): {}", wishResponsePage.getSize());
 
         return new ResponseEntity<>(wishResponsePage, HttpStatus.OK);
     }
