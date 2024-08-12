@@ -60,7 +60,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
         configuration.addAllowedHeader("*"); // 필요에 따라 특정 헤더만 허용할 수 있습니다.
         configuration.setAllowCredentials(true); // 쿠키 및 자격 증명 허용 .cors(withDefaults())
 
