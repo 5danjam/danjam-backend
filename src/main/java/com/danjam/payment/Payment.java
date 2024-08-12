@@ -1,18 +1,19 @@
 package com.danjam.payment;
 
+import com.danjam.users.Users;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @ToString
 @Builder
-@Entity
+@Table(name = "payment")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Payment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,10 +28,7 @@ public class Payment {
 
     private LocalDateTime approvedAt;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
-
-    // TODO : userId 임시방편
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Users users;
 }
