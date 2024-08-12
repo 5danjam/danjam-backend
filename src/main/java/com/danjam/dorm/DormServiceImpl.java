@@ -1,8 +1,7 @@
 package com.danjam.dorm;
 
 import com.danjam.d_category.Dcategory;
-import com.danjam.dorm.querydsl.DormDto;
-import com.danjam.dorm.querydsl.DormListDto;
+import com.danjam.search.querydsl.DormDto;
 import com.danjam.users.Users;
 import com.danjam.d_category.DcategoryRepository;
 import com.danjam.users.UsersRepository;
@@ -45,10 +44,5 @@ public class DormServiceImpl implements DormService {
                 .build();
 
        return DORMREPOSITORY.save(dorm).getId();
-    }
-
-    @Transactional
-    public List<DormDto> selectAll() {
-        return DORMREPOSITORY.findList();
     }
 }

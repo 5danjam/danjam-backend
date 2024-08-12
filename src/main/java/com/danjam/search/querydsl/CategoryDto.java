@@ -1,4 +1,4 @@
-package com.danjam.dorm.querydsl;
+package com.danjam.search.querydsl;
 
 import lombok.Builder;
 import lombok.Data;

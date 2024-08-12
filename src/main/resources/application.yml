@@ -13,7 +13,6 @@ spring:
       format_sql: true
       ddl-auto: none
 
-logging:
   level:
     org.springframework.security: DEBUG
 #    org.springframework.web: DEBUG

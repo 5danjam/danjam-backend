@@ -42,7 +42,7 @@ public class Booking {
     @Column(name = "check_out")
     private LocalDate checkOut;
 
-    @ColumnDefault("N")
+    @ColumnDefault("Y")
     private String status;
 
 
