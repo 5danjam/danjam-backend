@@ -47,15 +47,12 @@ public class SearchController {
 
     @PostMapping("/search")
     public ResponseEntity<Map<String, Object>> showByCondition(@RequestBody SearchDto searchDto) {
-        System.out.println(">>>>>>>>>>>>>>searchDto: "+searchDto);
-//        System.out.println("localdatetime: "+ LocalDate.now());
-        System.out.println("checkIn: "+searchDto.getCheckIn());
-        System.out.println("checkOut: "+searchDto.getCheckOut());
+        System.out.println(">>>>>>>>>>>>>>searchDto: " + searchDto);
 
         Map<String, Object> resultMap = new HashMap();
 
-//        List<DormDto> list = searchService.cheapRoom(searchDto);
-        List<DormDto> list = searchService.findList();
+        List<DormDto> list = searchService.cheapRoom(searchDto);
+//        List<DormDto> list = searchService.findList();
         System.out.println("cheapRoom: " + list);
 
         if (list.isEmpty()) {

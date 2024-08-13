@@ -37,8 +37,12 @@ public class SearchRepoImpl implements SearchRepo {
     @Override
     public List<DormDto> cheapRoom(SearchDto searchDto) {
         String city = searchDto.getCity();
+        String checkIn = searchDto.getCheckIn().toString();
+        String checkOut = searchDto.getCheckOut().toString();
 //        LocalDateTime checkIn = searchDto.getCheckIn();
 //        LocalDateTime checkOut = searchDto.getCheckOut();
+        LocalDate checkInDate = LocalDate.parse(checkIn);
+        LocalDate checkOutDate = LocalDate.parse(checkOut);
         int person = searchDto.getPerson();
 
         QRoom subRoom = new QRoom("subRoom");
@@ -49,12 +53,13 @@ public class SearchRepoImpl implements SearchRepo {
                 .where(subRoom.dorm.id.eq(qDorm.id))
                 .groupBy(subRoom.dorm.id);
 
-//        JPQLQuery<LocalDate> groupByCheckIn =
-                JPAExpressions
-                .select(qBooking.room.id, qBooking.checkIn)
-                .from(qBooking).fetch().stream().forEach(System.out::println);
+        JPQLQuery<LocalDate> groupByCheckIn = JPAExpressions
+                .select(qBooking.checkIn)
+                .from(qBooking)
+                .groupBy(qBooking.room.id);
 //                .where(qBooking.room.id.eq(qRoom.id))
 //                .groupBy(qBooking.room.id)
+//              .fetch().stream().forEach(System.out::println);
 
         JPQLQuery<LocalDate> groupByCheckOut = JPAExpressions
                 .select(subBooking.checkOut)
@@ -87,7 +92,12 @@ public class SearchRepoImpl implements SearchRepo {
                 .join(qDorm.dcategory, qDcategory)
                 .join(qDorm.user, qUsers)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
-                .where(qRoom.price.eq(groupByDorm),
+                .where(
+//                        qRoom.id.eq(groupByCheckIn.select(qBooking.room.id).where())
+                        // 아래 낫비트윈 사용할 때, LocalDate 사용했음->오류 안남
+//                        qBooking.checkIn.notBetween(checkIn, checkOut),
+//                        qBooking.checkOut.notBetween(checkIn, checkOut),
+                        qRoom.price.eq(groupByDorm),
                         qDorm.city.eq(city),
                         qRoom.person.eq(person))
                 .fetch();
@@ -96,8 +106,6 @@ public class SearchRepoImpl implements SearchRepo {
     @Override
     public List<DormDto> findList() {
         QRoom subRoom = new QRoom("subRoom");
-        System.out.println("localDateTime: "+LocalDateTime.now());
-        System.out.println("localDateTime toString: "+LocalDateTime.now().toString());
 
         JPQLQuery<Integer> groupByDorm = JPAExpressions
                 .select(subRoom.price.min())
