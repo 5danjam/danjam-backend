@@ -1,6 +1,7 @@
 package com.danjam.payment;
 
-import java.time.LocalDateTime;
+import com.danjam.users.Users;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -12,7 +13,8 @@ public record PaymentResponseDTO(
         String approvedAt
 ) {
 
-    public Payment toEntity() {
+//    public Payment toEntity(final Users users) {
+    public Payment toEntity(final Users users) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(approvedAt, formatter);
 
@@ -22,7 +24,7 @@ public record PaymentResponseDTO(
                 .totalAmount(totalAmount)
                 .status(status)
                 .approvedAt(zonedDateTime.toLocalDateTime())
-                .userId(1L)
+                .users(users)
                 .build();
     }
 }

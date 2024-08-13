@@ -1,17 +1,24 @@
 package com.danjam.payment;
 
+import com.danjam.booking.Booking;
+import com.danjam.booking.BookingRepository;
+import com.danjam.booking.BookingService;
+import com.danjam.room.Room;
+import com.danjam.room.RoomRepository;
+import com.danjam.users.Users;
+import com.danjam.users.UsersRepository;
+import com.danjam.users.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 @Service
@@ -23,6 +30,9 @@ public class PaymentService {
     private static final String TOSS_API_URL = "https://api.tosspayments.com/v1/payments/confirm";
 
     private final PaymentRepository paymentRepository;
+    private final UsersRepository usersRepository;
+    private final RoomRepository roomRepository;
+    private final BookingRepository bookingRepository;
 
     @Value("${payments.toss.secret.key}")
     private String widgetSecretKey;
@@ -46,12 +56,31 @@ public class PaymentService {
                 PaymentResponseDTO.class
         );
 
-        PaymentResponseDTO paymentResponseDTO = response.getBody();
-        log.info("paymentResponseDTO: {}", paymentResponseDTO);
-        if (paymentResponseDTO != null) {
-            Payment payment = paymentResponseDTO.toEntity();
-            return paymentRepository.save(payment);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            PaymentResponseDTO paymentResponseDTO = response.getBody();
+            log.info("paymentResponseDTO: {}", paymentResponseDTO);
+            if (paymentResponseDTO != null) {
+                Users user = usersRepository.findById(paymentRequestDTO.userId())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                Room room = roomRepository.findById(paymentRequestDTO.roomId())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+                Payment payment = paymentResponseDTO.toEntity(user);
+                Payment savedPayment = paymentRepository.save(payment);
+
+                Booking booking = Booking.builder()
+                        .users(user)
+                        .room(room)
+                        .payment(savedPayment)
+                        .person(paymentRequestDTO.person())
+                        .checkIn(LocalDate.parse(paymentRequestDTO.checkIn(), DateTimeFormatter.ISO_DATE))
+                        .checkOut(LocalDate.parse(paymentRequestDTO.checkOut(), DateTimeFormatter.ISO_DATE))
+                        .build();
+                bookingRepository.save(booking);
+
+                return payment;
+            }
         }
+
         return null;
     }
 
