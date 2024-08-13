@@ -1,4 +1,4 @@
-package com.danjam.dorm;
+package com.danjam.dorm.querydsl;
 
 import java.util.List;
 

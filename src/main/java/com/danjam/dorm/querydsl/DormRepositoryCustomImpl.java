@@ -1,7 +1,8 @@
-package com.danjam.dorm;
+package com.danjam.dorm.querydsl;
 
-import com.danjam.booking.BookingDTOD;
+import com.danjam.booking.querydsl.DormBookingDTO;
 import com.danjam.booking.QBooking;
+import com.danjam.dorm.QDorm;
 import com.danjam.room.QRoom;
 import com.danjam.room.RoomDTO;
 import com.danjam.users.QUsers;
@@ -35,7 +36,7 @@ public class DormRepositoryCustomImpl implements DormRepositoryCustom {
                                 room.id,
                                 room.name,
                                 room.type),
-                        Projections.constructor(BookingDTOD.class,
+                        Projections.constructor(DormBookingDTO.class,
                                 booking.id,
                                 booking.checkIn,
                                 booking.checkOut,

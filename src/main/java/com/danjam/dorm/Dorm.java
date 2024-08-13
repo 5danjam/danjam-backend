@@ -15,7 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.List;
 
-@Getter
+@Data
 @Entity
 @ToString
 @Table(name = "dorm")
@@ -30,7 +30,7 @@ public class Dorm {
     private String name;
     private String description;
 
-    @Column(name = "contact_num")
+    @Column(name = "contact_num", length = 13, nullable = true)
     private String contactNum;
 
     private String city;

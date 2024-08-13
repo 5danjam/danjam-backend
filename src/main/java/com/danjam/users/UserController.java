@@ -2,16 +2,11 @@ package com.danjam.users;
 
 
 import com.danjam.logInSecurity.UserDetail;
-import com.danjam.users.Users;
-import com.danjam.users.UsersDto;
-import com.danjam.users.UsersService;
+import com.danjam.users.querydsl.UsersListDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,5 +86,13 @@ public class UserController {
 
         response.put("result", "success");
         return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("UsersList")
+    public ResponseEntity<List<Users>> findUsersList() {
+        List<Users> userList = usersService.findUsersList();
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 }

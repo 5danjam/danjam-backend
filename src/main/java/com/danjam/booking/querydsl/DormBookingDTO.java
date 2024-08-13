@@ -1,4 +1,4 @@
-package com.danjam.booking;
+package com.danjam.booking.querydsl;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 @NoArgsConstructor
-public class BookingDTOD {
+public class DormBookingDTO {
 
         private Long id;
         private LocalDate checkIn;
@@ -17,14 +17,11 @@ public class BookingDTOD {
         private String userName;
 
     @Builder
-        public BookingDTOD(Long id, LocalDate checkIn, LocalDate checkOut, String userName) {
+        public DormBookingDTO(Long id, LocalDate checkIn, LocalDate checkOut, String userName) {
             this.id = id;
             this.checkIn = checkIn;
             this.checkOut = checkOut;
             this.userName = userName;
         }
-
-        // Getters and setters
-
 
 }

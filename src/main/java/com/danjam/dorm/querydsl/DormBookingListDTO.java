@@ -1,15 +1,10 @@
-package com.danjam.dorm;
+package com.danjam.dorm.querydsl;
 
-import com.danjam.booking.Booking;
-import com.danjam.booking.BookingDTOD;
-import com.danjam.room.Room;
+import com.danjam.booking.querydsl.DormBookingDTO;
 import com.danjam.room.RoomDTO;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Optional;
 
 @Data
 @Builder
@@ -21,10 +16,10 @@ public class DormBookingListDTO {
     private String address;
     private String status;
     private RoomDTO room;
-    private BookingDTOD booking;
+    private DormBookingDTO booking;
 
     @Builder
-    public DormBookingListDTO(Long id, String name, String address, String status, RoomDTO room, BookingDTOD booking) {
+    public DormBookingListDTO(Long id, String name, String address, String status, RoomDTO room, DormBookingDTO booking) {
         this.id = id;
         this.name = name;
         this.address = address;
