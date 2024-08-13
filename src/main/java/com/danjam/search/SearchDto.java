@@ -1,28 +1,26 @@
 package com.danjam.search;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
 
 @Data
 @NoArgsConstructor
 public class SearchDto {
     private String city;
-    private LocalDate checkIn;
-    private LocalDate checkOut;
+    private LocalDateTime checkIn;
+    private LocalDateTime checkOut;
     private int person;
 
     @Builder
     public SearchDto(String city, String checkIn, String checkOut, int person) {
         this.city = city;
-        this.checkIn = LocalDate.parse(checkIn);
-        this.checkOut = LocalDate.parse(checkOut);
+        this.checkIn = LocalDateTime.parse(checkIn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.checkOut = LocalDateTime.parse(checkOut, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        this.checkOut = LocalDateTime.parse(checkOut, formatter).withHour(11).withMinute(0).withSecond(0);
         this.person = person;
     }
 }

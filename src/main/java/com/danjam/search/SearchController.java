@@ -1,5 +1,6 @@
 package com.danjam.search;
 
+import com.danjam.search.querydsl.BookingDto;
 import com.danjam.search.querydsl.DormDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -48,10 +49,13 @@ public class SearchController {
     public ResponseEntity<Map<String, Object>> showByCondition(@RequestBody SearchDto searchDto) {
         System.out.println(">>>>>>>>>>>>>>searchDto: "+searchDto);
 //        System.out.println("localdatetime: "+ LocalDate.now());
+        System.out.println("checkIn: "+searchDto.getCheckIn());
+        System.out.println("checkOut: "+searchDto.getCheckOut());
 
         Map<String, Object> resultMap = new HashMap();
 
-        List<DormDto> list = searchService.cheapRoom(searchDto.getCity(), searchDto.getCheckIn(), searchDto.getCheckOut(), searchDto.getPerson());
+//        List<DormDto> list = searchService.cheapRoom(searchDto);
+        List<DormDto> list = searchService.findList();
         System.out.println("cheapRoom: " + list);
 
         if (list.isEmpty()) {
@@ -64,12 +68,12 @@ public class SearchController {
         return ResponseEntity.ok(resultMap);
     }
 
-    @PostMapping("/search/condition")
-    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody SearchDto searchDto) {
+    @PostMapping("/search/{amenity_id}")
+    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody SearchDto searchDto, @RequestParam(required = true) int amenity_id) {
         System.out.println(searchDto);
         Map<String, Object> resultMap = new HashMap();
 
-        List<DormDto> list = searchService.findByPerson(searchDto.getCity(), searchDto.getPerson());
+        List<DormDto> list = searchService.findByAmenity(searchDto, amenity_id);
         System.out.println(list);
 
         if (list.isEmpty()) {

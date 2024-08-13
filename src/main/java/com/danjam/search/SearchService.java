@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,8 +16,8 @@ import java.util.List;
 public class SearchService {
     private final SearchRepo searchRepo;
 
-    public List<DormDto> cheapRoom(String city, LocalDate checkIn, LocalDate checkOut, int person) {
-        return searchRepo.cheapRoom(city, checkIn, checkOut, person);
+    public List<DormDto> cheapRoom(SearchDto searchDto) {
+        return searchRepo.cheapRoom(searchDto);
     }
 
     public List<DormDto> findList() {
@@ -27,8 +28,8 @@ public class SearchService {
         return searchRepo.findByCity(city);
     }
 
-    public List<DormDto> findByPerson(String city, int person) {
-        return searchRepo.findByPerson(city, person);
+    public List<DormDto> findByAmenity(SearchDto searchDto, int amenityId) {
+        return searchRepo.findByAmenity(searchDto, amenityId);
     }
 
 }
