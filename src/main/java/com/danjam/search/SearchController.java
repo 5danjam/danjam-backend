@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,20 +18,16 @@ public class SearchController {
 
     @PostMapping("/town/list")
     public ResponseEntity<Map<String, Object>> showTownList(@RequestBody SearchDto searchDto) {
-        String city = searchDto.getCity();
-        System.out.println("city" + city);
-
         Map<String, Object> resultMap = new HashMap();
-        List<String> list = searchService.findByCity(city);
+        List<String> list = searchService.findByCity(searchDto.getCity());
 
-        System.out.println(city + " townList: " + list);
+        System.out.println(searchDto.getCity() + " townList: " + list);
 
         if (list.isEmpty()) {
             resultMap.put("result", "fail");
             resultMap.put("townList", null);
         } else {
             resultMap.put("result", "success");
-            System.out.println(list);
             resultMap.put("townList", list);
         }
         return ResponseEntity.ok(resultMap);
@@ -49,14 +46,12 @@ public class SearchController {
 
     @PostMapping("/search")
     public ResponseEntity<Map<String, Object>> showByCondition(@RequestBody SearchDto searchDto) {
-        System.out.println(searchDto);
-
-        String city = searchDto.getCity();
-        System.out.println(city);
+        System.out.println(">>>>>>>>>>>>>>searchDto: "+searchDto);
+//        System.out.println("localdatetime: "+ LocalDate.now());
 
         Map<String, Object> resultMap = new HashMap();
 
-        List<DormDto> list = searchService.cheapRoom(searchDto.getCity(), searchDto.getPerson());
+        List<DormDto> list = searchService.cheapRoom(searchDto.getCity(), searchDto.getCheckIn(), searchDto.getCheckOut(), searchDto.getPerson());
         System.out.println("cheapRoom: " + list);
 
         if (list.isEmpty()) {
@@ -64,7 +59,6 @@ public class SearchController {
             resultMap.put("dormList", null);
         } else {
             resultMap.put("result", "success");
-            System.out.println(list);
             resultMap.put("dormList", list);
         }
         return ResponseEntity.ok(resultMap);
@@ -83,7 +77,6 @@ public class SearchController {
             resultMap.put("dormList", null);
         } else {
             resultMap.put("result", "success");
-            System.out.println(list);
             resultMap.put("dormList", list);
         }
         return ResponseEntity.ok(resultMap);

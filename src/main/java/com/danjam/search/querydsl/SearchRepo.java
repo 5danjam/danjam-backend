@@ -1,9 +1,10 @@
 package com.danjam.search.querydsl;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface SearchRepo {
-    List<DormDto> cheapRoom(String city, int person);
+    List<DormDto> cheapRoom(String city, LocalDate checkIn, LocalDate checkOut, int person);
 
     List<DormDto> findList();
 

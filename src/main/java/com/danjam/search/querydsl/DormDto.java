@@ -19,10 +19,12 @@ public class DormDto {
     private String address;
     private CategoryDto dcategory; //카테고리
     private UserDto user;
-    private List<RoomDto> rooms;
+    private RoomDto rooms;
+//    private List<RoomDto> rooms;
+//    private List<BookingDto> bookings;
 
-//    public DormDto(Long id, String name, String description, String contactNum, String city, String town, String address, CategoryDto dcategory, UserDto user) {
-    public DormDto(Long id, String name, String description, String contactNum, String city, String town, String address, CategoryDto dcategory, UserDto user, List<RoomDto> rooms) {
+//    public DormDto(Long id, String name, String description, String contactNum, String city, String town, String address, CategoryDto dcategory, UserDto user, List<RoomDto> rooms, List<BookingDto> bookings) {
+    public DormDto(Long id, String name, String description, String contactNum, String city, String town, String address, CategoryDto dcategory, UserDto user, RoomDto rooms) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,6 +34,8 @@ public class DormDto {
         this.address = address;
         this.dcategory = dcategory;
         this.user = user;
+//        this.room = room;
         this.rooms = rooms;
+//        this.bookings = bookings;
     }
 }
