@@ -2,6 +2,7 @@ package com.danjam.search;
 
 import com.danjam.search.querydsl.BookingDto;
 import com.danjam.search.querydsl.DormDto;
+import com.danjam.search.querydsl.SearchRepoImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SearchController {
     private final SearchService searchService;
+    private final SearchRepoImpl searchRepoImpl;
 
     @PostMapping("/town/list")
     public ResponseEntity<Map<String, Object>> showTownList(@RequestBody SearchDto searchDto) {
@@ -48,6 +50,10 @@ public class SearchController {
     @PostMapping("/search")
     public ResponseEntity<Map<String, Object>> showByCondition(@RequestBody SearchDto searchDto) {
         System.out.println(">>>>>>>>>>>>>>searchDto: " + searchDto);
+        System.out.println("checkIn: "+searchDto.getCheckIn());
+        searchDto.setCheckIn(searchDto.getCheckIn().withHour(15).withMinute(0).withSecond(0).withNano(0));
+        searchDto.setCheckOut(searchDto.getCheckOut().withHour(11).withMinute(0).withSecond(0).withNano(0));
+        System.out.println("checkIn:" + searchDto.getCheckIn() + " checkOut:" + searchDto.getCheckOut());
 
         Map<String, Object> resultMap = new HashMap();
 

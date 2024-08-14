@@ -25,6 +25,8 @@ public class SearchDto {
         this.city = city;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+//        this.checkIn = LocalDateTime.parse(checkIn).withHour(15).withMinute(0).withSecond(0).withNano(0);
+//        this.checkOut = LocalDateTime.parse(checkOut).withHour(11).withMinute(0).withSecond(0).withNano(0);
 //        this.checkIn = checkIn.withHour(15).withMinute(0).withSecond(0).withNano(0);
 //        this.checkOut = checkOut.withHour(11).withMinute(0).withSecond(0).withNano(0);
 
