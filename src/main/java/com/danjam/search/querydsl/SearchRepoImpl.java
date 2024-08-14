@@ -74,6 +74,7 @@ public class SearchRepoImpl implements SearchRepo {
         LocalDateTime checkIn = searchDto.getCheckIn();
         LocalDateTime checkOut = searchDto.getCheckOut();
         int person = searchDto.getPerson();
+        System.out.println(searchDto);
 
         QRoom subRoom = new QRoom("subRoom");
         QBooking subBooking = new QBooking("subBooking");

@@ -5,6 +5,7 @@ import com.danjam.search.querydsl.BookingDto;
 import com.danjam.search.querydsl.DormDto;
 import com.danjam.search.querydsl.SearchRepoImpl;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CollectionIdType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +53,7 @@ public class SearchController {
     @PostMapping("/search")
     public ResponseEntity<Map<String, Object>> showByCondition(@RequestBody SearchDto searchDto) {
         System.out.println(">>>>>>>>>>>>>>searchDto: " + searchDto);
-        System.out.println("checkIn: "+searchDto.getCheckIn());
+        System.out.println("checkIn: " + searchDto.getCheckIn());
         searchDto.setCheckIn(searchDto.getCheckIn().withHour(15).withMinute(0).withSecond(0).withNano(0));
         searchDto.setCheckOut(searchDto.getCheckOut().withHour(11).withMinute(0).withSecond(0).withNano(0));
         System.out.println("checkIn:" + searchDto.getCheckIn() + " checkOut:" + searchDto.getCheckOut());
@@ -74,8 +75,15 @@ public class SearchController {
     }
 
     @PostMapping("/search/amenity")
-    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody List<AmenityDto> amenities) {
-        System.out.println(amenities.toString());
+//    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody List<AmenityDto> amenities) {
+    public ResponseEntity<Map<String, Object>> searchByCondition(/*@RequestParam(name = "search") SearchDto searchDto,*/
+            /*@RequestParam(name = "amenity") List<AmenityDto> amenities,*/
+//                                                             @RequestParam(name = "town") List<String> cities
+            @RequestBody List<String> cities) {
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/search/amenity");
+//        System.out.println(searchDto.toString());
+//        System.out.println(amenities);
+        System.out.println(cities);
         Map<String, Object> resultMap = new HashMap();
 
 //        List<DormDto> list = searchService.findByAmenity(amenities);
