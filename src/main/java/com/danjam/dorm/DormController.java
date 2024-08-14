@@ -37,14 +37,14 @@ public class DormController {
         return resultMap;
     }
 
-    @GetMapping
-    public ResponseEntity<Page<DormDTO>> getDorms(@RequestParam(value = "city", required = false) String city,
-                                                  @RequestParam(value = "person", required = false) Integer person,
-                                                  @RequestParam(value = "minPrice", required = false) Integer minPrice,
-                                                  @RequestParam(value = "maxPrice", required = false) Integer maxPrice,
-                                                  @RequestParam(value = "type", required = false) String type,
-                                                  Pageable pageable) {
-        Page<DormDTO> dorms = DORMSERVICE.searchDorms(pageable, city, person, minPrice, maxPrice, type);
-        return ResponseEntity.ok(dorms);
-    }
+//    @GetMapping
+//    public ResponseEntity<Page<DormDTO>> getDorms(@RequestParam(value = "city", required = false) String city,
+//                                                  @RequestParam(value = "person", required = false) Integer person,
+//                                                  @RequestParam(value = "minPrice", required = false) Integer minPrice,
+//                                                  @RequestParam(value = "maxPrice", required = false) Integer maxPrice,
+//                                                  @RequestParam(value = "type", required = false) String type,
+//                                                  Pageable pageable) {
+//        Page<DormDTO> dorms = DORMSERVICE.searchDorms(pageable, city, person, minPrice, maxPrice, type);
+//        return ResponseEntity.ok(dorms);
+//    }
 }

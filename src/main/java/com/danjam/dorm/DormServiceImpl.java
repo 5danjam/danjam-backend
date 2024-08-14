@@ -57,43 +57,43 @@ public class DormServiceImpl implements DormService {
         return DORMREPOSITORY.save(dorm).getId();
     }
 
-    public Page<Dorm> getDorms(Pageable pageable) {
-        return DORMREPOSITORY.findAll(pageable);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<DormDTO> searchDorms(Pageable pageable, String city, Integer person, Integer minPrice, Integer maxPrice, String type) {
-        Page<Dorm> dorms;
-
-        if (city != null || person != null || minPrice != null || maxPrice != null || type != null) {
-            dorms = DORMREPOSITORY.findAll(pageable);
-        } else {
-            dorms = DORMREPOSITORY.findAll(pageable);
-        }
-
-        return dorms.map(dorm -> {
-            List<Room> rooms = ROOMREPOSITORY.findByDorm(dorm).stream()
-                    .filter(room -> (person == null || room.getPerson() >= person) &&
-                            (minPrice == null || room.getPrice() >= minPrice) &&
-                            (maxPrice == null || room.getPrice() <= maxPrice) &&
-                            (type == null || room.getType().equals(type)))
-                    .toList();
-
-            List<RoomDTO> roomDTOs = rooms.stream()
-                    .map(room -> {
-                        List<RoomImgDTO> roomImgDTOs = ROOMIMGREPOSITORY.findByRoom(room).stream()
-                                .map(RoomImgDTO::new)
-                                .collect(Collectors.toList());
-                        return new RoomDTO(room, roomImgDTOs);
-                    })
-                    .collect(Collectors.toList());
-
-            Double averageRating = REVIEWREPOSITORY.findAverageRatingByDormId(dorm.getId());
-            Integer lowestPrice = ROOMREPOSITORY.findLowestRoomPriceByDormId(dorm.getId());
-
-            return new DormDTO(dorm, averageRating, lowestPrice, roomDTOs);
-        });
-    }
+//    public Page<Dorm> getDorms(Pageable pageable) {
+//        return DORMREPOSITORY.findAll(pageable);
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public Page<DormDTO> searchDorms(Pageable pageable, String city, Integer person, Integer minPrice, Integer maxPrice, String type) {
+//        Page<Dorm> dorms;
+//
+//        if (city != null || person != null || minPrice != null || maxPrice != null || type != null) {
+//            dorms = DORMREPOSITORY.findAll(pageable);
+//        } else {
+//            dorms = DORMREPOSITORY.findAll(pageable);
+//        }
+//
+//        return dorms.map(dorm -> {
+//            List<Room> rooms = ROOMREPOSITORY.findByDorm(dorm).stream()
+//                    .filter(room -> (person == null || room.getPerson() >= person) &&
+//                            (minPrice == null || room.getPrice() >= minPrice) &&
+//                            (maxPrice == null || room.getPrice() <= maxPrice) &&
+//                            (type == null || room.getType().equals(type)))
+//                    .toList();
+//
+//            List<RoomDTO> roomDTOs = rooms.stream()
+//                    .map(room -> {
+//                        List<RoomImgDTO> roomImgDTOs = ROOMIMGREPOSITORY.findByRoom(room).stream()
+//                                .map(RoomImgDTO::new)
+//                                .collect(Collectors.toList());
+//                        return new RoomDTO(room, roomImgDTOs);
+//                    })
+//                    .collect(Collectors.toList());
+//
+//            Double averageRating = REVIEWREPOSITORY.findAverageRatingByDormId(dorm.getId());
+//            Integer lowestPrice = ROOMREPOSITORY.findLowestRoomPriceByDormId(dorm.getId());
+//
+//            return new DormDTO(dorm, averageRating, lowestPrice, roomDTOs);
+//        });
+//    }
 
 
 }
