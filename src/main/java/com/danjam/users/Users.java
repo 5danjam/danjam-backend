@@ -25,12 +25,14 @@ public class Users {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Setter(AccessLevel.PACKAGE)
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Setter(AccessLevel.PACKAGE)
     @Column(name = "phone_number", nullable = false)
     private int phoneNum;
 
