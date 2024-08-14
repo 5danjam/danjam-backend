@@ -1,9 +1,6 @@
 package com.danjam.search;
 
-import com.danjam.search.querydsl.AmenityDto;
-import com.danjam.search.querydsl.BookingDto;
-import com.danjam.search.querydsl.DormDto;
-import com.danjam.search.querydsl.SearchRepoImpl;
+import com.danjam.search.querydsl.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CollectionIdType;
 import org.springframework.http.ResponseEntity;
@@ -53,9 +50,9 @@ public class SearchController {
     @PostMapping("/search")
     public ResponseEntity<Map<String, Object>> showByCondition(@RequestBody SearchDto searchDto) {
         System.out.println(">>>>>>>>>>>>>>searchDto: " + searchDto);
-        System.out.println("checkIn: " + searchDto.getCheckIn());
-        searchDto.setCheckIn(searchDto.getCheckIn().withHour(15).withMinute(0).withSecond(0).withNano(0));
-        searchDto.setCheckOut(searchDto.getCheckOut().withHour(11).withMinute(0).withSecond(0).withNano(0));
+//        System.out.println("checkIn: " + searchDto.getCheckIn());
+//        searchDto.setCheckIn(searchDto.getCheckIn().withHour(15).withMinute(0).withSecond(0).withNano(0));
+//        searchDto.setCheckOut(searchDto.getCheckOut().withHour(11).withMinute(0).withSecond(0).withNano(0));
         System.out.println("checkIn:" + searchDto.getCheckIn() + " checkOut:" + searchDto.getCheckOut());
 
         Map<String, Object> resultMap = new HashMap();
@@ -75,19 +72,14 @@ public class SearchController {
     }
 
     @PostMapping("/search/amenity")
-//    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody List<AmenityDto> amenities) {
-    public ResponseEntity<Map<String, Object>> searchByCondition(/*@RequestParam(name = "search") SearchDto searchDto,*/
-            /*@RequestParam(name = "amenity") List<AmenityDto> amenities,*/
-//                                                             @RequestParam(name = "town") List<String> cities
-            @RequestBody List<String> cities) {
+    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody FilterDto filterDto) {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/search/amenity");
-//        System.out.println(searchDto.toString());
-//        System.out.println(amenities);
-        System.out.println(cities);
+        System.out.println(filterDto);
         Map<String, Object> resultMap = new HashMap();
 
 //        List<DormDto> list = searchService.findByAmenity(amenities);
         List<DormDto> list = searchService.findList();
+//        List<DormDto> list = searchService.findByFilter(filterDto);
 
         if (list.isEmpty()) {
             resultMap.put("result", "fail");

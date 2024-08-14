@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 import static com.querydsl.core.types.Projections.list;
@@ -33,7 +34,7 @@ public class SearchRepoImpl implements SearchRepo {
     private final QUsers qUsers = QUsers.users;
     private final QDcategory qDcategory = QDcategory.dcategory;
     private final QRoom qRoom = QRoom.room;
-    private final QRoom subRoom = new QRoom("subRoom");
+    /*private final QRoom subRoom = new QRoom("subRoom");
 
     private final JPQLQuery<Integer> groupByDorm = JPAExpressions
             .select(subRoom.price.min())
@@ -65,7 +66,7 @@ public class SearchRepoImpl implements SearchRepo {
             .from(qDorm)
             .join(qDorm.dcategory, qDcategory)
             .join(qDorm.user, qUsers)
-            .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id));
+            .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id));*/
 
     @Override
     public List<DormDto> cheapRoom(SearchDto searchDto) {
@@ -82,14 +83,21 @@ public class SearchRepoImpl implements SearchRepo {
         JPQLQuery<Long> groupByDate = JPAExpressions
                 .select(subBooking.room.id)
                 .from(subBooking)
-                .where(subBooking.checkIn.notBetween(checkIn, checkOut),
-                        subBooking.checkOut.notBetween(checkIn, checkOut));
+                .where(subBooking.checkIn.between(checkIn, checkOut),
+                        subBooking.checkOut.between(checkIn, checkOut));
 
         JPQLQuery<Integer> groupByDorm = JPAExpressions
                 .select(subRoom.price.min())
                 .from(subRoom)
                 .where(subRoom.dorm.id.eq(qDorm.id))
                 .groupBy(subRoom.dorm.id);
+
+        // 시티에 대한 검색조건만 존재할 때
+        JPQLQuery<Long> searchByPerson = JPAExpressions
+                .select(qRoom.id)
+                .from(qRoom)
+                .where(qRoom.person.loe(searchDto.getPerson()));
+
 
         return queryFactory
                 .select(Projections.constructor(DormDto.class,
@@ -147,7 +155,8 @@ public class SearchRepoImpl implements SearchRepo {
                         qRoom.id.notIn(groupByDate),
                         qRoom.price.eq(groupByDorm),
                         qDorm.city.eq(city),
-                        qRoom.person.loe(person))
+                        qRoom.person.loe(person)
+                )
                 .fetch();
     }
 
@@ -205,8 +214,32 @@ public class SearchRepoImpl implements SearchRepo {
     }
 
     @Override
-    public List<DormDto> findByAmenity(List<AmenityDto> amenities) {
+    public List<DormDto> findByFilter(FilterDto filterDto) {
         System.out.println("findByAmenity");
+        System.out.println(filterDto.getSearchDto());
+        System.out.println(filterDto.getAmenities());
+        System.out.println(filterDto.getCities());
+
+        List<String> cities = filterDto.getCities();
+        LocalDateTime checkIn = filterDto.getSearchDto().getCheckIn();
+        LocalDateTime checkOut = filterDto.getSearchDto().getCheckOut();
+        int person = filterDto.getSearchDto().getPerson();
+
+        QRoom subRoom = new QRoom("subRoom");
+        QBooking subBooking = new QBooking("subBooking");
+
+        JPQLQuery<Long> groupByDate = JPAExpressions
+                .select(subBooking.room.id)
+                .from(subBooking)
+                .where(subBooking.checkIn.between(checkIn, checkOut),
+                        subBooking.checkOut.between(checkIn, checkOut));
+
+        JPQLQuery<Integer> groupByDorm = JPAExpressions
+                .select(subRoom.price.min())
+                .from(subRoom)
+                .where(subRoom.dorm.id.eq(qDorm.id))
+                .groupBy(subRoom.dorm.id);
+
         return queryFactory
                 .select(Projections.constructor(DormDto.class,
                         qDorm.id,
@@ -222,18 +255,42 @@ public class SearchRepoImpl implements SearchRepo {
                         Projections.constructor(UserDto.class,
                                 qUsers.id,
                                 qUsers.name,
-                                qUsers.role
-                        ),
+                                qUsers.role),
                         Projections.constructor(RoomDto.class,
                                 qRoom.id,
                                 qRoom.person,
-                                qRoom.price
-                        )
+                                qRoom.price)
+//                        queryFactory.select(Projections.constructor(RoomDto.class,
+//                                qRoom.id,
+//                                qRoom.person,
+//                                qRoom.price))
+//                                .from(qRoom).where(minPrice.having(qRoom.price.eq(qRoom.price.min()))).groupBy(qRoom.dorm.id)
+//                                Projections.constructor(CategoryDto.class,
+//                                qDcategory.id,
+//                                qDcategory.name),
+//                        Projections.constructor(UserDto.class,
+//                                qUsers.id,
+//                                qUsers.name,
+//                                qUsers.role),
+//                        list(Projections.constructor(RoomDto.class,
+//                                qRoom.id,
+//                                qRoom.person,
+//                                qRoom.price,
+//                                list(Projections.constructor(BookingDto.class,
+//                                        qBooking.id,
+//                                        qBooking.checkIn,
+//                                        qBooking.checkOut
+//                                ))))
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
                 .join(qDorm.user, qUsers)
-//                .join(room.qDorm, qDorm)
+                .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
+                .where(
+                        qRoom.id.notIn(groupByDate),
+                        qRoom.price.eq(groupByDorm),
+                        qDorm.city.eq(filterDto.getSearchDto().getCity()).isNotNull(),
+                        qRoom.person.loe(person).isNotNull())
                 .fetch();
     }
 }
