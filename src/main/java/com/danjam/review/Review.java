@@ -47,4 +47,16 @@ public class Review {
         this.createAt = createAt;
         this.updateAt = updateAt;
     }
+
+//    public ReviewDto toDto() {
+//        return ReviewDto.builder()
+//                .id(this.id)
+//                .content(this.content)
+//                .rate(this.rate)
+//                .users(this.users)
+//                .booking(this.booking)
+//                .createdAt(this.createAt)
+//                .updatedAt(this.updateAt)
+//                .build();
+//    }
 }

@@ -14,12 +14,27 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewDto {
-    private long id;
+    private Long id;
+    private Long userId;
+    private String email;
+    private Long bookingId;
     private String content;
     private Users users;
     private Booking booking;
+    private double rate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public ReviewDto(Long id, String content, Double rate, Long userId, Long bookingId, LocalDateTime createdAt, LocalDateTime updatedAt, String email) {
+        this.id = id;
+        this.content = content;
+        this.rate = rate;
+        this.userId = userId;
+        this.bookingId = bookingId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.email = email;
+    }
 
     public Review toEntity() {
         return Review.builder()
@@ -28,6 +43,7 @@ public class ReviewDto {
                 .booking(booking)
                 .createAt(createdAt)
                 .updateAt(updatedAt)
+                .rate(rate)
                 .build();
     }
 }
