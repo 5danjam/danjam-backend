@@ -1,6 +1,5 @@
 package com.danjam.search;
 
-import com.danjam.search.querydsl.AmenityDto;
 import com.danjam.search.querydsl.BookingDto;
 import com.danjam.search.querydsl.DormDto;
 import com.danjam.search.querydsl.SearchRepoImpl;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,13 +71,13 @@ public class SearchController {
         return ResponseEntity.ok(resultMap);
     }
 
-    @PostMapping("/search/amenity")
-    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody List<AmenityDto> amenities) {
-        System.out.println(amenities.toString());
+    @PostMapping("/search/{amenity_id}")
+    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody SearchDto searchDto, @RequestParam(required = true) int amenity_id) {
+        System.out.println(searchDto);
         Map<String, Object> resultMap = new HashMap();
 
-//        List<DormDto> list = searchService.findByAmenity(amenities);
-        List<DormDto> list = searchService.findList();
+        List<DormDto> list = searchService.findByAmenity(searchDto, amenity_id);
+        System.out.println(list);
 
         if (list.isEmpty()) {
             resultMap.put("result", "fail");

@@ -15,5 +15,5 @@ public interface SearchRepo {
 
 //    List<DormDto> findByDate(String checkIn, String checkOut);
 
-    List<DormDto> findByAmenity(List<AmenityDto> amenities);
+    List<DormDto> findByAmenity(SearchDto searchDto, int amenityId);
 }

@@ -33,39 +33,6 @@ public class SearchRepoImpl implements SearchRepo {
     private final QUsers qUsers = QUsers.users;
     private final QDcategory qDcategory = QDcategory.dcategory;
     private final QRoom qRoom = QRoom.room;
-    private final QRoom subRoom = new QRoom("subRoom");
-
-    private final JPQLQuery<Integer> groupByDorm = JPAExpressions
-            .select(subRoom.price.min())
-            .from(subRoom)
-            .where(subRoom.dorm.id.eq(qDorm.id))
-            .groupBy(subRoom.dorm.id);
-
-    private final JPQLQuery<DormDto> dormList = JPAExpressions
-            .select(Projections.constructor(DormDto.class,
-                    qDorm.id,
-                    qDorm.name,
-                    qDorm.description,
-                    qDorm.contactNum,
-                    qDorm.city,
-                    qDorm.town,
-                    qDorm.address,
-                    Projections.constructor(CategoryDto.class,
-                            qDcategory.id,
-                            qDcategory.name),
-                    Projections.constructor(UserDto.class,
-                            qUsers.id,
-                            qUsers.name,
-                            qUsers.role),
-                    Projections.constructor(RoomDto.class,
-                            qRoom.id,
-                            qRoom.person,
-                            qRoom.price)
-            ))
-            .from(qDorm)
-            .join(qDorm.dcategory, qDcategory)
-            .join(qDorm.user, qUsers)
-            .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id));
 
     @Override
     public List<DormDto> cheapRoom(SearchDto searchDto) {
@@ -152,7 +119,6 @@ public class SearchRepoImpl implements SearchRepo {
 
     @Override
     public List<DormDto> findList() {
-//        return dormList.where(qRoom.price.eq(groupByDorm)).fetch();
         QRoom subRoom = new QRoom("subRoom");
 
         JPQLQuery<Integer> groupByDorm = JPAExpressions
@@ -192,9 +158,6 @@ public class SearchRepoImpl implements SearchRepo {
 
     @Override
     public List<String> findByCity(String city) {
-        if (city.equalsIgnoreCase("선택")) {
-
-        }
         return queryFactory
                 .select(qDorm.dorm.town)
                 .from(qDorm)
@@ -204,8 +167,12 @@ public class SearchRepoImpl implements SearchRepo {
     }
 
     @Override
-    public List<DormDto> findByAmenity(List<AmenityDto> amenities) {
-        System.out.println("findByAmenity");
+    public List<DormDto> findByAmenity(SearchDto searchDto, int amenityId) {
+        String city = searchDto.getCity();
+        LocalDateTime checkIn = searchDto.getCheckIn();
+        LocalDateTime checkOut = searchDto.getCheckOut();
+        int person = searchDto.getPerson();
+
         return queryFactory
                 .select(Projections.constructor(DormDto.class,
                         qDorm.id,
@@ -222,17 +189,23 @@ public class SearchRepoImpl implements SearchRepo {
                                 qUsers.id,
                                 qUsers.name,
                                 qUsers.role
-                        ),
-                        Projections.constructor(RoomDto.class,
-                                qRoom.id,
-                                qRoom.person,
-                                qRoom.price
                         )
+                        /*,
+                        Projections.constructor(RoomDto.class,
+                                room.id,
+                                room.person,
+                                room.price,
+                                room.qDorm.id
+                        )*/
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
                 .join(qDorm.user, qUsers)
 //                .join(room.qDorm, qDorm)
+                .where(qDorm.city.eq(city)
+                        /*,room.qDorm.id.eq(qDorm.id),
+                        room.person.eq(person)*/
+                )
                 .fetch();
     }
 }

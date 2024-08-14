@@ -1,6 +1,5 @@
 package com.danjam.search;
 
-import com.danjam.search.querydsl.AmenityDto;
 import com.danjam.search.querydsl.DormDto;
 import com.danjam.search.querydsl.SearchRepo;
 import jakarta.transaction.Transactional;
@@ -29,8 +28,8 @@ public class SearchService {
         return searchRepo.findByCity(city);
     }
 
-    public List<DormDto> findByAmenity(List<AmenityDto> amenities) {
-        return searchRepo.findByAmenity(amenities);
+    public List<DormDto> findByAmenity(SearchDto searchDto, int amenityId) {
+        return searchRepo.findByAmenity(searchDto, amenityId);
     }
 
 }
