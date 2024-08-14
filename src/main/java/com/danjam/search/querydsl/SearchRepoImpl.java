@@ -1,6 +1,8 @@
 package com.danjam.search.querydsl;
 
+import com.danjam.amenity.QAmenity;
 import com.danjam.booking.QBooking;
+import com.danjam.d_amenity.QDamenity;
 import com.danjam.d_category.QDcategory;
 import com.danjam.dorm.QDorm;
 import com.danjam.room.QRoom;
@@ -97,7 +99,6 @@ public class SearchRepoImpl implements SearchRepo {
                 .select(qRoom.id)
                 .from(qRoom)
                 .where(qRoom.person.loe(searchDto.getPerson()));
-
 
         return queryFactory
                 .select(Projections.constructor(DormDto.class,
@@ -225,8 +226,11 @@ public class SearchRepoImpl implements SearchRepo {
         LocalDateTime checkOut = filterDto.getSearchDto().getCheckOut();
         int person = filterDto.getSearchDto().getPerson();
 
+        QDorm subDorm = new QDorm("subDorm");
         QRoom subRoom = new QRoom("subRoom");
         QBooking subBooking = new QBooking("subBooking");
+        QAmenity subAmenity = new QAmenity("subAmenity");
+        QDamenity subDamenity = new QDamenity("subDamenity");
 
         JPQLQuery<Long> groupByDate = JPAExpressions
                 .select(subBooking.room.id)
@@ -239,6 +243,31 @@ public class SearchRepoImpl implements SearchRepo {
                 .from(subRoom)
                 .where(subRoom.dorm.id.eq(qDorm.id))
                 .groupBy(subRoom.dorm.id);
+
+        // filterDto에서 골라준 town과 같은 town의 호텔 반환
+        JPQLQuery<Long> groupByTown = JPAExpressions
+                .select(subDorm.id)
+                .from(subDorm)
+                .where(subDorm.town.in(filterDto.getCities()));
+
+//        JPQLQuery<String> groupByCity =
+//                JPAExpressions
+//                .select(subDorm.town)
+//                .from(subDorm)
+//                .where(subDorm.city.eq(filterDto.getSearchDto().getCity()))
+//                .distinct().fetch().forEach(System.out::println);
+
+//        JPQLQuery<Long> groupByFilterTown = JPAExpressions
+//                .select(subDorm.id)
+//                .from(subDorm)
+//                .where(subDorm.town.contains(groupByCity));
+
+        // dorm이 가진 amenity 리스트
+        /*JPQLQuery<Long> groupByDamenity = JPAExpressions
+                .select(subDamenity.amenity.id)
+                .from(subDamenity)
+                .where(subDamenity.dorm.id.eq(qDorm.id))
+                .groupBy(subDamenity.dorm.id);*/
 
         return queryFactory
                 .select(Projections.constructor(DormDto.class,
@@ -289,8 +318,12 @@ public class SearchRepoImpl implements SearchRepo {
                 .where(
                         qRoom.id.notIn(groupByDate),
                         qRoom.price.eq(groupByDorm),
-                        qDorm.city.eq(filterDto.getSearchDto().getCity()).isNotNull(),
-                        qRoom.person.loe(person).isNotNull())
+                        qDorm.id.in(groupByTown),
+//                        qDorm.id.eq(groupByDamenity.co),
+//                        qDorm.city.eq(filterDto.getSearchDto().getCity()),
+//                        qDorm.town.contains(groupByCity),
+//                        qDorm.id.eq(groupByFilterTown),
+                        qRoom.person.loe(person))
                 .fetch();
     }
 }

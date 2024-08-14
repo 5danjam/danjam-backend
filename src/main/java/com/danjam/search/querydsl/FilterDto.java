@@ -13,11 +13,13 @@ import java.util.logging.Filter;
 @NoArgsConstructor
 public class FilterDto {
     private SearchDto searchDto;
-    private List<AmenityDto> amenities;
+//    private List<AmenityDto> amenities;
+    private List<Long> amenities;
     private List<String> cities;
 
     @Builder
-    public FilterDto(SearchDto searchDto, List<AmenityDto> amenities, List<String> cities) {
+//    public FilterDto(SearchDto searchDto, List<AmenityDto> amenities, List<String> cities) {
+    public FilterDto(SearchDto searchDto, List<Long> amenities, List<String> cities) {
         this.searchDto = searchDto;
         this.amenities = amenities;
         this.cities = cities;

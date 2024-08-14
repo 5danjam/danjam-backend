@@ -77,9 +77,8 @@ public class SearchController {
         System.out.println(filterDto);
         Map<String, Object> resultMap = new HashMap();
 
-//        List<DormDto> list = searchService.findByAmenity(amenities);
-        List<DormDto> list = searchService.findList();
-//        List<DormDto> list = searchService.findByFilter(filterDto);
+        List<DormDto> list = searchService.findByFilter(filterDto);
+        System.out.println("filterList: " + list);
 
         if (list.isEmpty()) {
             resultMap.put("result", "fail");
