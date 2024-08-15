@@ -18,12 +18,12 @@ import java.util.List;
 public class SearchService {
     private final SearchRepo searchRepo;
 
-    public List<DormDto> cheapRoom(SearchDto searchDto) {
-        return searchRepo.cheapRoom(searchDto);
+    public List<DormDto> findList(SearchDto searchDto) {
+        return searchRepo.findList(searchDto);
     }
 
-    public List<DormDto> findList() {
-        return searchRepo.findList();
+    public List<DormDto> findAllList() {
+        return searchRepo.findAllList();
     }
 
     public List<String> findByCity(String city) {

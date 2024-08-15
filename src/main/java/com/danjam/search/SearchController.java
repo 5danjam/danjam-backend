@@ -7,17 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
 public class SearchController {
     private final SearchService searchService;
-    private final SearchRepoImpl searchRepoImpl;
 
     @PostMapping("/town/list")
     public ResponseEntity<Map<String, Object>> showTownList(@RequestBody SearchDto searchDto) {
@@ -40,9 +36,16 @@ public class SearchController {
     public ResponseEntity<Map<String, Object>> showList() {
         Map<String, Object> resultMap = new HashMap();
 
-        resultMap.put("result", "success");
-        resultMap.put("dormList", searchService.findList());
-        System.out.println(searchService.findList());
+        List<DormDto> list = searchService.findAllList();
+        if (list.isEmpty()) {
+            resultMap.put("result", "fail");
+            resultMap.put("dormList", null);
+        } else {
+            resultMap.put("result", "success");
+            resultMap.put("dormList", list);
+        }
+
+        System.out.println(searchService.findAllList());
 
         return ResponseEntity.ok(resultMap);
     }
@@ -50,16 +53,12 @@ public class SearchController {
     @PostMapping("/search")
     public ResponseEntity<Map<String, Object>> showByCondition(@RequestBody SearchDto searchDto) {
         System.out.println(">>>>>>>>>>>>>>searchDto: " + searchDto);
-//        System.out.println("checkIn: " + searchDto.getCheckIn());
-//        searchDto.setCheckIn(searchDto.getCheckIn().withHour(15).withMinute(0).withSecond(0).withNano(0));
-//        searchDto.setCheckOut(searchDto.getCheckOut().withHour(11).withMinute(0).withSecond(0).withNano(0));
         System.out.println("checkIn:" + searchDto.getCheckIn() + " checkOut:" + searchDto.getCheckOut());
 
         Map<String, Object> resultMap = new HashMap();
 
-        List<DormDto> list = searchService.cheapRoom(searchDto);
-//        List<DormDto> list = searchService.findList();
-        System.out.println("cheapRoom: " + list);
+        List<DormDto> list = searchService.findList(searchDto);
+        System.out.println("findList: " + list);
 
         if (list.isEmpty()) {
             resultMap.put("result", "fail");
@@ -71,7 +70,7 @@ public class SearchController {
         return ResponseEntity.ok(resultMap);
     }
 
-    @PostMapping("/search/amenity")
+    @PostMapping("/search/filter")
     public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody FilterDto filterDto) {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/search/amenity");
         System.out.println(filterDto);
