@@ -154,18 +154,11 @@ public class SearchRepoImpl implements SearchRepo {
 
         BooleanExpression groupBySearch;
         // 검색 조건에 따른 필터 만들기
-        if (searchDto.getCity().equalsIgnoreCase("선택") && searchDto.getCheckIn() == searchDto.getCheckOut()) { // 도시를 선택하지 않았을 경우
-            groupBySearch = qRoom.price.eq(groupByDorm)
-                    .and(qRoom.person.goe(person))
-                    .and(qDorm.id.eq(qRoom.dorm.id));
-        } else if(!searchDto.getCity().equalsIgnoreCase("선택") && searchDto.getCheckIn() == searchDto.getCheckOut()){
-            groupBySearch = qRoom.price.eq(groupByDorm)
-                    .and(qRoom.person.goe(person))
-                    .and(qDorm.city.eq(city));
-        } else if (searchDto.getCity().equalsIgnoreCase("선택") && searchDto.getCheckIn() != searchDto.getCheckOut()) {
+        if (searchDto.getCity().equalsIgnoreCase("선택")) { // 도시를 선택하지 않았을 경우
             groupBySearch = qRoom.id.notIn(groupByDate)
                     .and(qRoom.price.eq(groupByDorm))
-                    .and(qRoom.person.goe(person));
+                    .and(qRoom.person.goe(person))
+                    .and(qDorm.id.eq(qRoom.dorm.id));
         } else {
             groupBySearch = qRoom.id.notIn(groupByDate)
                     .and(qRoom.price.eq(groupByDorm))
