@@ -1,7 +1,11 @@
 package com.danjam.dorm;
 
 import com.danjam.d_category.Dcategory;
+import com.danjam.room.Room;
 import com.danjam.users.Users;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -10,9 +14,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.List;
 
-@Getter
+@Data
 @Entity
-@ToString(exclude = {"user", "dcategory"})
+@ToString
 @Table(name = "dorm")
 @DynamicInsert // default
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,34 +27,34 @@ public class Dorm {
     private Long id;
 
     private String name;
-
     private String description;
 
-    @Column(name = "contact_num")
+    @Column(name = "contact_num", length = 13, nullable = true)
     private String contactNum;
 
     private String city;
-
     private String town;
-
     private String address;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    private Dcategory dcategory; // 카테고리
+    private Dcategory dcategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
-    private Users user; // 판매자
+    private Users user;
 
     @ColumnDefault("N")
     private String status;
 
-//    @OneToMany(mappedBy = "dorm", fetch = FetchType.LAZY)
-//    private List<Room> rooms;
+    @OneToMany(mappedBy = "dorm", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Room> rooms;
 
     @Builder
-    public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status) {
+//    public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status) {
+    public Dorm(Long id,String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status, List<Room> rooms) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.contactNum = contactNum;
@@ -60,5 +64,6 @@ public class Dorm {
         this.user = user;
         this.dcategory = dcategory;
         this.status = status;
+        this.rooms = rooms;
     }
 }

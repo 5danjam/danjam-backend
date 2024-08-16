@@ -27,7 +27,6 @@ payments:
 
   level:
     org.springframework.security: DEBUG
-#    org.springframework.web: DEBUG
-#    org.springframework.web.servlet: DEBUG
-#    org.springframework.web.filter: DEBUG
-
+#org.springframework.web: DEBUG
+#org.springframework.web.servlet: DEBUG
+#org.springframework.web.filter: DEBUG
