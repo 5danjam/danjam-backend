@@ -9,6 +9,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,17 +39,16 @@ public class Booking {
     private int person;
 
     @Column(name = "check_in")
-    private LocalDate checkIn;
+    private LocalDateTime checkIn;
 
     @Column(name = "check_out")
-    private LocalDate checkOut;
+    private LocalDateTime checkOut;
 
-    @ColumnDefault("N")
+    @ColumnDefault("Y")
     private String status;
-
-
+  
     @Builder
-    public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDate checkIn, LocalDate checkOut, String status) {
+    public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDateTime checkIn, LocalDateTime checkOut, String status) {
         this.id = id;
         this.users = users;
         this.room = room;

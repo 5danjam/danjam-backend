@@ -1,6 +1,8 @@
 package com.danjam.dorm;
 
 import com.danjam.d_category.Dcategory;
+import com.danjam.dorm.querydsl.DormDto;
+import com.danjam.dorm.querydsl.DormListDto;
 import com.danjam.users.Users;
 import com.danjam.d_category.DcategoryRepository;
 import com.danjam.users.UsersRepository;
@@ -8,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,5 +45,10 @@ public class DormServiceImpl implements DormService {
                 .build();
 
        return DORMREPOSITORY.save(dorm).getId();
+    }
+
+    @Transactional
+    public List<DormDto> selectAll() {
+        return DORMREPOSITORY.findList();
     }
 }
