@@ -20,9 +20,9 @@ public class AmenityServiceImpl implements AmenityService {
         List<Amenity> amenities = AMENITYREPOSITORY.findAll();
 
         return amenities.stream()
-                .map(dcategorie -> AmenityListDTO.builder()
-                .id(dcategorie.getId())
-                .name(dcategorie.getName())
+                .map(dcategory -> AmenityListDTO.builder()
+                .id(dcategory.getId())
+                .name(dcategory.getName())
                 .build())
                 .collect(Collectors.toList());
 

@@ -20,7 +20,7 @@ public class DormController {
 
         HashMap<String, Object> resultMap = new HashMap();
 
-        System.out.println("dormAddDTO: "+dormAddDTO);
+        System.out.println("dormAddDTO: " + dormAddDTO);
 
         try {
             Long dormId = DORMSERVICE.insert(dormAddDTO);

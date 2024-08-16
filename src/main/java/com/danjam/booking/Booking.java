@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -45,7 +46,7 @@ public class Booking {
 
     @ColumnDefault("Y")
     private String status;
-    
+  
     @Builder
     public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDateTime checkIn, LocalDateTime checkOut, String status) {
         this.id = id;

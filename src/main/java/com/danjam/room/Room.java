@@ -1,9 +1,12 @@
 package com.danjam.room;
 
+import com.danjam.booking.Booking;
 import com.danjam.dorm.Dorm;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -30,6 +33,9 @@ public class Room {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dorm_id")
     private Dorm dorm;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<Booking> bookings;
 
     @Builder
     public Room(String name, String description,  int person, int price,String type, Dorm dorm) {
