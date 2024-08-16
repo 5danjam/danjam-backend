@@ -18,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
@@ -67,13 +69,16 @@ public class PaymentService {
                 Payment payment = paymentResponseDTO.toEntity(user);
                 Payment savedPayment = paymentRepository.save(payment);
 
+                LocalDateTime checkIn = LocalDateTime.parse(paymentRequestDTO.checkIn());
+                LocalDateTime checkOut = LocalDateTime.parse(paymentRequestDTO.checkOut());
+
                 Booking booking = Booking.builder()
                         .users(user)
                         .room(room)
                         .payment(savedPayment)
                         .person(paymentRequestDTO.person())
-                        .checkIn(LocalDate.parse(paymentRequestDTO.checkIn(), DateTimeFormatter.ISO_DATE))
-                        .checkOut(LocalDate.parse(paymentRequestDTO.checkOut(), DateTimeFormatter.ISO_DATE))
+                        .checkIn(checkIn)
+                        .checkOut(checkOut)
                         .build();
                 bookingRepository.save(booking);
 

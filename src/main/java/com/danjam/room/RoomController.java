@@ -17,7 +17,7 @@ public class RoomController {
     @PostMapping("/room/insert")
     public HashMap<String, Object> insert(@RequestBody RoomAddDTO roomAddDTO) {
 
-        HashMap<String, Object> resultMap = new HashMap();
+        HashMap<String, Object> resultMap = new HashMap<>();
 
         System.out.println("roomAddDTO: "+roomAddDTO);
 
