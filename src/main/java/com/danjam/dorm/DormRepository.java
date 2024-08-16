@@ -2,11 +2,10 @@ package com.danjam.dorm;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+@Repository
+public interface DormRepository extends JpaRepository<Dorm, Long> {
 
-public interface DormRepository extends JpaRepository<Dorm,Long> {
 
-    @Override
-    Optional<Dorm> findById(Long id);
 }
