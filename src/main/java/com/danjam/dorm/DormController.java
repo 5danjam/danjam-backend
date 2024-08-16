@@ -1,0 +1,47 @@
+package com.danjam.dorm;
+
+import com.sun.tools.jconsole.JConsoleContext;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@CrossOrigin
+@RequiredArgsConstructor
+public class DormController {
+
+    private final DormServiceImpl DORMSERVICE;
+
+    @PostMapping("/dorm/insert")
+    public HashMap<String, Object> insert(@RequestBody DormAddDTO dormAddDTO) {
+
+        HashMap<String, Object> resultMap = new HashMap();
+
+        System.out.println("dormAddDTO: "+dormAddDTO);
+
+        try {
+            Long dormId = DORMSERVICE.insert(dormAddDTO);
+            resultMap.put("result", "success");
+            resultMap.put("resultId", dormId);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put("result", "fail");
+        }
+
+        return resultMap;
+    }
+
+    @GetMapping("/dorm/showList")
+    public ResponseEntity<Map<String, Object>> showList() {
+        Map<String, Object> resultMap = new HashMap();
+
+        resultMap.put("result", "success");
+        resultMap.put("dormList", DORMSERVICE.selectAll());
+        System.out.println(DORMSERVICE.selectAll());
+        return ResponseEntity.ok(resultMap);
+    }
+}
