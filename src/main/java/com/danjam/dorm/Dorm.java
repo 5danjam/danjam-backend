@@ -1,7 +1,6 @@
 package com.danjam.dorm;
 
 import com.danjam.d_category.Dcategory;
-
 import com.danjam.room.Room;
 import com.danjam.users.Users;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -53,8 +52,8 @@ public class Dorm {
     private List<Room> rooms;
 
     @Builder
-    public Dorm(Long id,String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status, List<Room> rooms) {
-        this.id = id;
+//    public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status) {
+    public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status, List<Room> rooms) {
         this.name = name;
         this.description = description;
         this.contactNum = contactNum;
