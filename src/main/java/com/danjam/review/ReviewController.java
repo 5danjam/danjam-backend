@@ -2,9 +2,6 @@ package com.danjam.review;
 
 import com.danjam.r_tag.RtagAddDTO;
 import com.danjam.r_tag.RtagServiceImpl;
-import com.danjam.users.Users;
-import com.danjam.users.UsersDto;
-import com.danjam.wish.querydsl.WishDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
