@@ -1,4 +1,4 @@
-package com.danjam.amenity;
+package com.danjam.tag;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,16 +11,16 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-public class AmenityController {
+public class TagController {
 
-    private final AmenityServiceImpl AMENITYSERVICE;
+    private final TagServiceImpl TAGSERVICE;
 
-    @GetMapping("/amenity/list")
+    @GetMapping("/tag/list")
     public HashMap<String, Object> list(){
         HashMap<String, Object> resultMap = new HashMap();
-        List<AmenityListDTO> amenityList = AMENITYSERVICE.list();
+        List<TagDto> tagList = TAGSERVICE.list();
         try {
-            resultMap.put("amenityList", amenityList);
+            resultMap.put("tagList", tagList);
             resultMap.put("result", "success");
 
         } catch (Exception e) {
