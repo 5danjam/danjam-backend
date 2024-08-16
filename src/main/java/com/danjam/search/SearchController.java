@@ -2,11 +2,9 @@ package com.danjam.search;
 
 import com.danjam.search.querydsl.*;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.CollectionIdType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController

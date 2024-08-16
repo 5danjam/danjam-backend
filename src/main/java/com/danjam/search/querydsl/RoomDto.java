@@ -1,8 +1,5 @@
 package com.danjam.search.querydsl;
 
-import com.danjam.dorm.Dorm;
-import com.danjam.room.Room;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
