@@ -21,6 +21,8 @@ public class DamenityController {
 
         HashMap<String, Object> resultMap = new HashMap();
 
+        System.out.println("damenityAddDTO: "+ damenityAddDTO);
+
         try {
             DAMENITYSERVICE.insert(damenityAddDTO);
             resultMap.put("result", "success");

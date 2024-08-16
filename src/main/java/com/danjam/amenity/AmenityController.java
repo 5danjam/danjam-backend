@@ -16,10 +16,11 @@ public class AmenityController {
     private final AmenityServiceImpl AMENITYSERVICE;
 
     @GetMapping("/amenity/list")
-    public HashMap<String, Object> list() {
+    public HashMap<String, Object> list(){
         HashMap<String, Object> resultMap = new HashMap();
         List<AmenityListDTO> amenityList = AMENITYSERVICE.list();
-      
+        System.out.println("list 입성"+amenityList);
+
         try {
             resultMap.put("amenityList", amenityList);
             resultMap.put("result", "success");

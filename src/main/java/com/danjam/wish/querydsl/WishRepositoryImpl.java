@@ -36,23 +36,4 @@ public class WishRepositoryImpl implements WishQuerydslRepository {
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
     }
-
-    @Override
-    public List<WishDTO> findWishesById(Long userId) {
-        QWish qWish = QWish.wish;
-        QUsers qUsers = QUsers.users;
-        QDorm qDorm = QDorm.dorm;
-
-        return queryFactory
-                .select(Projections.constructor(WishDTO.class,
-                        qWish.id,
-                        qWish.users.id.as("userId"),
-                        qWish.dorm.id.as("dormId")
-                ))
-                .from(qWish)
-                .join(qWish.users, qUsers)
-                .join(qWish.dorm, qDorm)
-                .where(qUsers.id.eq(userId))
-                .fetch();
-    }
 }

@@ -25,7 +25,7 @@ public class RoomImgController {
     private final RoomImgServiceImpl ROOMIMGSERVICE;
 
     @RequestMapping(value = "/roomImg/insert", method = RequestMethod.POST)
-    public Map<String, Object> FileUploads(HttpServletRequest request,
+    public Map<String, Object> AxiosFileTest(HttpServletRequest request,
                                              @RequestParam(value = "roomId", required = false) Long roomId,
                                              @RequestParam(value = "file", required = false) MultipartFile[] files) throws IOException {
         Map<String, Object> resultMap = new HashMap<>();

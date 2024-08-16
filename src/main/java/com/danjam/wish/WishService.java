@@ -1,6 +1,5 @@
 package com.danjam.wish;
 
-import com.danjam.wish.querydsl.WishDTO;
 import com.danjam.wish.querydsl.WishWithSliceResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -38,11 +37,5 @@ public class WishService {
             return true;
         }
         return false;
-    }
-
-    public List<WishDTO> findWishesById(Long id) {
-        List<WishDTO> wishes = wishRepository.findWishesById(id);
-
-        return wishes;
     }
 }
