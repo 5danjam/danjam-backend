@@ -7,10 +7,6 @@ import com.danjam.review.DormStatsDTO;
 import com.danjam.review.QReview;
 import com.danjam.review.ReviewDto;
 import com.danjam.review.StatsAndReviewDTO;
-import com.danjam.tag.QTag;
-import com.danjam.users.QUsers;
-import com.danjam.wish.QWish;
-import com.danjam.wish.querydsl.WishDTO;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
