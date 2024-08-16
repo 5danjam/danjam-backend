@@ -17,6 +17,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -25,47 +26,48 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // Disable CSRF protection
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors((corsConfigurationSource) ->
-                        corsConfigurationSource
-                                .configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests((authorize) ->
-                        authorize
-                                .requestMatchers("/**").permitAll()
-                                .anyRequest().authenticated())
-                // formLogin 추가
-                .formLogin(form ->
-                        form
-                                .loginPage("/login")     // front에서 사용하는 로그인 페이지 url
-                                .loginProcessingUrl("/users/auth") // front에서 email+password 작성 받은 후 axios 전달하는 url, 실제로 login 진행됨
-                                .successForwardUrl("/users/authSuccess")
-                                .failureForwardUrl("/users/authFailure")
-                                .permitAll()
+                // Configure CORS
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource())
                 )
-                .logout((logout) ->
-                        logout
-                                .logoutUrl("/users/logout")
-                                .logoutSuccessUrl("/users/logoutSuccess")
-                                .clearAuthentication(true)
-                                .deleteCookies("JSESSIONID"))
-        ;
+                // Configure authorization rules
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/static/uploads/**").permitAll()
+                        .requestMatchers("/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                // Configure form login
+                .formLogin(form -> form
+                        .loginPage("/login")  // Frontend login page URL
+                        .loginProcessingUrl("/users/auth")  // URL to process login
+                        .successForwardUrl("/users/authSuccess")
+                        .failureForwardUrl("/users/authFailure")
+                        .permitAll()
+                )
+                // Configure logout
+                .logout(logout -> logout
+                        .logoutUrl("/users/logout")
+                        .logoutSuccessUrl("/users/logoutSuccess")
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                );
 
         return http.build();
     }
 
-    //        addAllowedMethod 설정 같은거라 주석 남겨요
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE")); // 허용할 메소드 설정
-//        configuration.addAllowedMethod("*");
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
-        configuration.addAllowedHeader("*"); // 필요에 따라 특정 헤더만 허용할 수 있습니다.
-        configuration.setAllowCredentials(true); // 쿠키 및 자격 증명 허용 .cors(withDefaults())
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));  // Frontend URL
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));  // Allow additional methods if needed
+        configuration.addAllowedHeader("*");  // Allow all headers
+        configuration.setAllowCredentials(true);  // Allow credentials (cookies, headers, etc.)
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);  // Apply configuration to all endpoints
+
         return source;
     }
 }
