@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
@@ -35,11 +34,11 @@ public class BookingResponse {
 
     private int person;
 
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime checkIn;
+    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate checkIn;
 
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime checkOut;
+    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate checkOut;
 
     private String status;
 

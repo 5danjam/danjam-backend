@@ -3,13 +3,13 @@ package com.danjam.booking;
 import com.danjam.payment.Payment;
 import com.danjam.room.Room;
 import com.danjam.users.Users;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,7 +29,10 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
+    @JsonBackReference
     private Room room;
+
+
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id", unique = true)
@@ -38,16 +41,17 @@ public class Booking {
     private int person;
 
     @Column(name = "check_in")
-    private LocalDateTime checkIn;
+    private LocalDate checkIn;
 
     @Column(name = "check_out")
-    private LocalDateTime checkOut;
+    private LocalDate checkOut;
 
-    @ColumnDefault("Y")
+    @ColumnDefault("N")
     private String status;
-    
+
+
     @Builder
-    public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDateTime checkIn, LocalDateTime checkOut, String status) {
+    public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDate checkIn, LocalDate checkOut, String status) {
         this.id = id;
         this.users = users;
         this.room = room;

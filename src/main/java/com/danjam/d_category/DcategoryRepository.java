@@ -12,4 +12,5 @@ public interface DcategoryRepository extends JpaRepository<Dcategory, Long> {
 
     @Override
     List<Dcategory> findAll();
+
 }
