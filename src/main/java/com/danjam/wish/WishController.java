@@ -1,5 +1,6 @@
 package com.danjam.wish;
 
+import com.danjam.wish.querydsl.WishDTO;
 import com.danjam.wish.querydsl.WishWithSliceResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/wishes")
@@ -34,5 +37,13 @@ public class WishController {
         Slice<WishWithSliceResponse> wishResponsePage = wishService.findAllByUsersById(id, pageable);
 
         return new ResponseEntity<>(wishResponsePage, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/wish/{id}")
+    public ResponseEntity<List<WishDTO>> findAllByUsersById(@PathVariable Long id) {
+        List<WishDTO> wishDTOList = wishService.findWishesById(id);
+
+        return new ResponseEntity<>(wishDTOList, HttpStatus.OK);
     }
 }

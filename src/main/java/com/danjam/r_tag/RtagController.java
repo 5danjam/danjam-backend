@@ -1,33 +1,38 @@
-package com.danjam.amenity;
+package com.danjam.r_tag;
 
+import com.danjam.d_amenity.DamenityAddDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.List;
 
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-public class AmenityController {
+public class RtagController {
 
-    private final AmenityServiceImpl AMENITYSERVICE;
+    private final RtagServiceImpl RTAGSERVICE;
 
-    @GetMapping("/amenity/list")
-    public HashMap<String, Object> list() {
+
+    @PostMapping("/rtag/insert")
+    public HashMap<String, Object> insert(@RequestBody RtagAddDTO rtagAddDTO) {
+
         HashMap<String, Object> resultMap = new HashMap();
-        List<AmenityListDTO> amenityList = AMENITYSERVICE.list();
-      
+
+        System.out.println("damenityAddDTO: "+ rtagAddDTO);
+
         try {
-            resultMap.put("amenityList", amenityList);
+            RTAGSERVICE.insert(rtagAddDTO);
             resultMap.put("result", "success");
 
         } catch (Exception e) {
             e.printStackTrace();
             resultMap.put("result", "fail");
         }
+
         return resultMap;
     }
 }
