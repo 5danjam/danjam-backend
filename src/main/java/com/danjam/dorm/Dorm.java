@@ -1,7 +1,6 @@
 package com.danjam.dorm;
 
 import com.danjam.d_category.Dcategory;
-
 import com.danjam.room.Room;
 import com.danjam.users.Users;
 import jakarta.persistence.*;
@@ -14,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Entity
-@ToString
+@ToString(exclude = {"user", "dcategory"})
 @Table(name = "dorm")
 @DynamicInsert // default
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

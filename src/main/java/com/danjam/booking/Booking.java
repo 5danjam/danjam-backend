@@ -32,8 +32,8 @@ public class Booking {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id", unique = true)
     private Payment payment;
 
     private int person;
@@ -46,7 +46,7 @@ public class Booking {
 
     @ColumnDefault("Y")
     private String status;
-
+  
     @Builder
     public Booking(Long id, Users users, Room room, Payment payment, int person, LocalDateTime checkIn, LocalDateTime checkOut, String status) {
         this.id = id;
