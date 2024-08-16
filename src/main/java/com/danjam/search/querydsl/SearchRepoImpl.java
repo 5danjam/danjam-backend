@@ -180,27 +180,6 @@ public class SearchRepoImpl implements SearchRepo {
                                 qReview.id,
                                 qReview.rate,
                                 qReview.booking)*/
-//                        queryFactory.select(Projections.constructor(RoomDto.class,
-//                                qRoom.id,
-//                                qRoom.person,
-//                                qRoom.price))
-//                                .from(qRoom).where(minPrice.having(qRoom.price.eq(qRoom.price.min()))).groupBy(qRoom.dorm.id)
-//                                Projections.constructor(CategoryDto.class,
-//                                qDcategory.id,
-//                                qDcategory.name),
-//                        Projections.constructor(UserDto.class,
-//                                qUsers.id,
-//                                qUsers.name,
-//                                qUsers.role),
-//                        list(Projections.constructor(RoomDto.class,
-//                                qRoom.id,
-//                                qRoom.person,
-//                                qRoom.price,
-//                                list(Projections.constructor(BookingDto.class,
-//                                        qBooking.id,
-//                                        qBooking.checkIn,
-//                                        qBooking.checkOut
-//                                ))))
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
@@ -208,10 +187,6 @@ public class SearchRepoImpl implements SearchRepo {
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
                 .where(
                         groupBySearch
-                        //qRoom.id.notIn(groupByDate)
-                        //        .and(qRoom.price.eq(groupByDorm))
-                        //        .and(qRoom.person.goe(person)) // 방의 수용인원이 person보다 크거나 같다면 보여줌
-                        //        .and(qDorm.city.eq(city))
                 )
                 .fetch();
     }
@@ -246,6 +221,20 @@ public class SearchRepoImpl implements SearchRepo {
                 .from(subRoom)
                 .where(subRoom.dorm.id.eq(qDorm.id))
                 .groupBy(subRoom.dorm.id);
+
+        // 검색 조건에 따른 필터 만들기
+        BooleanExpression groupBySearch;
+        if (filterDto.getSearchDto().getCity().equalsIgnoreCase("선택")) { // 도시를 선택하지 않았을 경우
+            groupBySearch = qRoom.id.notIn(groupByDate)
+                    .and(qRoom.price.eq(groupByDorm))
+                    .and(qRoom.person.goe(person))
+                    .and(qDorm.id.eq(qRoom.dorm.id));
+        } else {
+            groupBySearch = qRoom.id.notIn(groupByDate)
+                    .and(qRoom.price.eq(groupByDorm))
+                    .and(qRoom.person.goe(person)) // 방의 수용인원이 person보다 크거나 같다면 보여줌
+                    .and(qDorm.city.eq(filterDto.getSearchDto().getCity()));
+        }
 
         // filterDto에서 골라준 town과 같은 town의 호텔 반환
         JPQLQuery<Long> groupByTown = JPAExpressions
@@ -332,18 +321,8 @@ public class SearchRepoImpl implements SearchRepo {
                 .join(qDorm.user, qUsers)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
                 .where(
-                        qRoom.id.notIn(groupByDate),
-                        qRoom.person.goe(person), // 4명이라면 2, 5번 방 안떠야함
-                        qRoom.price.eq(groupByDorm),
-                        qDorm.city.eq(filterDto.getSearchDto().getCity()),
+                        groupBySearch,
                         qDorm.id.in(groupByFilter)
-
-//                        qDorm.id.in(groupByDamenity) // 성공
-//                        qDorm.id.in(groupByTown) // 성공
-//                        qDorm.id.in(groupByDamenityAndTown)
-//                        qDorm.city.eq(filterDto.getSearchDto().getCity()),
-//                        qDorm.town.contains(groupByCity),
-//                        qDorm.id.eq(groupByFilterTown),
                 )
                 .fetch();
     }

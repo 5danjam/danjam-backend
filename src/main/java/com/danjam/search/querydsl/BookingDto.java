@@ -16,7 +16,6 @@ public class BookingDto {
 
     @Builder
     public BookingDto(Long id, LocalDateTime checkIn, LocalDateTime checkOut, RoomDto room) {
-//    public BookingDto(Long id, LocalDate checkIn, LocalDate checkOut) {
         this.id = id;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
