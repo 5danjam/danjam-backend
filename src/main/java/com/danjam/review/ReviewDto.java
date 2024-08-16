@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.relational.core.sql.In;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -25,7 +27,10 @@ public class ReviewDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public ReviewDto(Long id, String content, Double rate, Long userId, Long bookingId, LocalDateTime createdAt, LocalDateTime updatedAt, String email) {
+
+
+    public ReviewDto(Long id, String content, Double rate, Long userId, Long bookingId, LocalDateTime createdAt,
+                     LocalDateTime updatedAt, String email) {
         this.id = id;
         this.content = content;
         this.rate = rate;

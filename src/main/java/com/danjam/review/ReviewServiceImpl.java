@@ -42,4 +42,15 @@ public class ReviewServiceImpl  {
         return reviews;
     }
 
+    public DormStatsDTO getDormStatsByDormId(Long dormId) {
+        DormStatsDTO dormStats = REVIEWREPOSITORY.calculateDormReviewStats(dormId);
+        System.out.println("dormStats = " + dormStats);
+
+        return dormStats;
+    }
+
+    public StatsAndReviewDTO getStatsAndReviews(Long dormId) {
+        return REVIEWREPOSITORY.makeStatsAndReviews(dormId);
+    }
+
 }

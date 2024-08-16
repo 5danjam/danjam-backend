@@ -30,8 +30,8 @@ public class ReviewController {
         HashMap<String, Object> resultMap = new HashMap();
 
         System.out.println("reviewWithTagsDTO = " + reviewWithTagsDTO);
-        System.out.println("reviewAddDTO: "+ reviewWithTagsDTO.getReview());
-        System.out.println("tags: "+ reviewWithTagsDTO.getTags());
+        System.out.println("reviewAddDTO: " + reviewWithTagsDTO.getReview());
+        System.out.println("tags: " + reviewWithTagsDTO.getTags());
 
         try {
             Long savedReview = REVIEWSERVICE.write(reviewWithTagsDTO.getReview());
@@ -57,7 +57,16 @@ public class ReviewController {
         return resultMap;
     }
 
+
     @GetMapping("/{dormId}")
+    public ResponseEntity<StatsAndReviewDTO> getReviewsByDormId(@PathVariable Long dormId) {
+        StatsAndReviewDTO result = REVIEWSERVICE.getStatsAndReviews(dormId);
+        System.out.println("result = " + result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /*@GetMapping("/{dormId}")
     public ResponseEntity<List<ReviewDto>> getReviewsByDormId(@PathVariable Long dormId) {
         List<ReviewDto> reviewDtos = REVIEWSERVICE.getReviewsByDormId(dormId);
         System.out.println("reviewDtos = " + reviewDtos);
@@ -65,4 +74,11 @@ public class ReviewController {
         return new ResponseEntity<>(reviewDtos, HttpStatus.OK);
     }
 
+    @GetMapping("/stats/{dormId}")
+    public ResponseEntity<DormStatsDTO> getDormStatsByDormId(@PathVariable Long dormId) {
+        DormStatsDTO dormStatsDTO = REVIEWSERVICE.getDormStatsByDormId(dormId);
+        System.out.println("dormStatsDTO = " + dormStatsDTO);
+
+        return new ResponseEntity<>(dormStatsDTO, HttpStatus.OK);
+    }*/
 }
