@@ -1,9 +1,12 @@
 package com.danjam.dorm;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -30,5 +33,15 @@ public class DormController {
         }
 
         return resultMap;
+    }
+
+    @GetMapping("/dorm/showList")
+    public ResponseEntity<Map<String, Object>> showList() {
+        Map<String, Object> resultMap = new HashMap();
+
+        resultMap.put("result", "success");
+        resultMap.put("dormList", DORMSERVICE.selectAll());
+        System.out.println(DORMSERVICE.selectAll());
+        return ResponseEntity.ok(resultMap);
     }
 }
