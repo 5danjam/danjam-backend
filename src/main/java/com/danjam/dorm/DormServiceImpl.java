@@ -57,10 +57,6 @@ public class DormServiceImpl implements DormService {
         return DORMREPOSITORY.save(dorm).getId();
     }
 
-    public Page<Dorm> getDorms(Pageable pageable) {
-        return DORMREPOSITORY.findAll(pageable);
-    }
-
     @Transactional(readOnly = true)
     public Page<DormDTO> searchDorms(Pageable pageable, String city, Integer person, Integer minPrice, Integer maxPrice, String type) {
         Page<Dorm> dorms;
