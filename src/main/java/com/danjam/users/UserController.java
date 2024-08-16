@@ -2,21 +2,12 @@ package com.danjam.users;
 
 
 import com.danjam.logInSecurity.UserDetail;
-import com.danjam.users.Users;
-import com.danjam.users.UsersDto;
-import com.danjam.users.UsersService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.danjam.users.querydsl.UsersListDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,20 +16,18 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/users")
+@RequestMapping("/users/")
 public class UserController {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private final UsersService usersService;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserController(UsersService usersService, BCryptPasswordEncoder passwordEncoder) {
         this.usersService = usersService;
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/validate")
+    @PostMapping("validate")
     public Map<String, Object> validate(@RequestBody String email) {
         Map<String, Object> resultMap = new HashMap<>();
         // 값 이상하게 넘어와서 replace 해줌
@@ -53,7 +42,7 @@ public class UserController {
         return resultMap;
     }
 
-    @PostMapping("/signUp")
+    @PostMapping("signUp")
     public HashMap<String, Object> signUp(@RequestBody UsersDto usersDto) {
         HashMap<String, Object> resultMap = new HashMap<>();
         System.out.println("회원가입 접속");
@@ -70,7 +59,7 @@ public class UserController {
         return resultMap;
     }
 
-    @RequestMapping("/authSuccess")
+    @RequestMapping("authSuccess")
     public ResponseEntity<Map<String, Object>> authSuccess(@AuthenticationPrincipal UserDetail userDetail) {
         HashMap<String, Object> response = new HashMap<>();
         Users user = userDetail.getUser();
@@ -83,7 +72,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping("/authFailure")
+    @RequestMapping("authFailure")
     public ResponseEntity<Map<String, Object>> authFailure() {
         HashMap<String, Object> response = new HashMap<>();
 
@@ -99,68 +88,11 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<List<UsersDto>> findAll() {
-        List<UsersDto> users = usersService.findAll()
-                .stream()
-                .map(UsersDto::fromEntity)
-                .toList();
 
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
+    @GetMapping("UsersList")
+    public ResponseEntity<List<Users>> findUsersList() {
+        List<Users> userList = usersService.findUsersList();
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UsersDto> findById(@PathVariable Long id) {
-        Users findByUser = usersService.findById(id);
-        if (findByUser == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        UsersDto user = UsersDto.fromEntity(findByUser);
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    @Transactional
-    @PatchMapping("/{id}")
-    public ResponseEntity<UsersDto> changePassword(@PathVariable Long id, @RequestBody Map<String, String> requestMap) {
-        log.info("password: {}", requestMap);
-        Users findByUser = usersService.findById(id);
-        if (findByUser == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        findByUser.setPassword(passwordEncoder.encode(requestMap.get("password")));
-        usersService.save(findByUser);
-        UsersDto user = UsersDto.fromEntity(findByUser);
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    @Transactional
-    @PatchMapping("/{id}/phone")
-    public ResponseEntity<Void> changePhone(@PathVariable Long id, @RequestBody Map<String, Integer> requestMap) {
-        Users findByUser = usersService.findById(id);
-        if (findByUser == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        findByUser.setPhoneNum(requestMap.get("phoneNum"));
-        usersService.save(findByUser);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Transactional
-    @PatchMapping("/{id}/cancel")
-    public ResponseEntity<Void> cancelMember(@PathVariable Long id) {
-        Users findByUser = usersService.findById(id);
-        if (findByUser == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        usersService.cancel(id);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 }
