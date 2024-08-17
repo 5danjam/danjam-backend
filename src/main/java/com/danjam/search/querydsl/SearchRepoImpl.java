@@ -7,6 +7,8 @@ import com.danjam.d_category.QDcategory;
 import com.danjam.dorm.QDorm;
 import com.danjam.review.QReview;
 import com.danjam.room.QRoom;
+import com.danjam.roomImg.QRoomImg;
+import com.danjam.roomImg.RoomImgAddDTO;
 import com.danjam.search.SearchDto;
 import com.danjam.users.QUsers;
 import com.querydsl.core.types.Projections;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.querydsl.core.types.Projections.list;
+
 @Repository
 @RequiredArgsConstructor
 public class SearchRepoImpl implements SearchRepo {
@@ -30,6 +34,15 @@ public class SearchRepoImpl implements SearchRepo {
     private final QRoom qRoom = QRoom.room;
     private final QDamenity qDamenity = QDamenity.damenity;
     private final QReview qReview = QReview.review;
+    private final QRoomImg qRoomImg = QRoomImg.roomImg;
+    private final QBooking qBooking = QBooking.booking;
+
+    QDorm subDorm = new QDorm("subDorm");
+    QRoom subRoom = new QRoom("subRoom");
+    QReview subReview = new QReview("subReview");
+    QBooking subBooking = new QBooking("subBooking");
+    QDamenity subDamenity = new QDamenity("subDamenity");
+
     /*private final QRoom subRoom = new QRoom("subRoom");
 
     private final JPQLQuery<Integer> groupByDorm = JPAExpressions
@@ -66,13 +79,20 @@ public class SearchRepoImpl implements SearchRepo {
 
     @Override
     public List<DormDto> findAllList() {
-        QRoom subRoom = new QRoom("subRoom");
-
+        // 방 최저가
         JPQLQuery<Integer> groupByDorm = JPAExpressions
                 .select(subRoom.price.min())
                 .from(subRoom)
                 .where(subRoom.dorm.id.eq(qDorm.id))
                 .groupBy(subRoom.dorm.id);
+
+        // 호텔 기준으로 리뷰 평점 구하기
+        JPQLQuery<Double> groupByReview = JPAExpressions
+                .select(subReview.rate.avg())
+                .from(subReview)
+                .join(subBooking).on(subReview.booking.id.eq(subBooking.id))
+                .join(subRoom).on(subBooking.room.id.eq(subRoom.id))
+                .where(subRoom.dorm.id.eq(qDorm.id));
 
         return queryFactory
                 .select(Projections.constructor(DormDto.class,
@@ -94,12 +114,23 @@ public class SearchRepoImpl implements SearchRepo {
                                 qRoom.id,
                                 qRoom.person,
                                 qRoom.price)
+                        ,
+//                        list(Projections.constructor(ImgDto.class,
+//                                qRoomImg.name,
+//                                qRoomImg.nameOriginal,
+//                                qRoomImg.size,
+//                                qRoomImg.ext)),
+                        groupByReview
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
                 .join(qDorm.user, qUsers)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
+//                .join(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
+//                .join(qReview).on(qDorm.id.eq(qReview.booking.room.dorm.id))
+//                .join(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
                 .where(qRoom.price.eq(groupByDorm))
+//                        ,qReview.rate.eq(groupByReview))
                 .fetch();
     }
 
@@ -126,9 +157,6 @@ public class SearchRepoImpl implements SearchRepo {
         int person = searchDto.getPerson();
         System.out.println(searchDto);
 
-        QRoom subRoom = new QRoom("subRoom");
-        QBooking subBooking = new QBooking("subBooking");
-
         JPQLQuery<Long> groupByDate = JPAExpressions
                 .select(subBooking.room.id)
                 .from(subBooking)
@@ -140,6 +168,15 @@ public class SearchRepoImpl implements SearchRepo {
                 .from(subRoom)
                 .where(subRoom.dorm.id.eq(qDorm.id))
                 .groupBy(subRoom.dorm.id);
+
+        // 호텔 기준으로 리뷰 평점 구하기
+        JPQLQuery<Double> groupByReview = JPAExpressions
+                .select(subReview.rate.avg())
+                .from(subReview)
+                .join(subBooking).on(subReview.booking.id.eq(subBooking.id))
+                .join(subRoom).on(subBooking.room.id.eq(subRoom.id))
+                .where(subRoom.dorm.id.eq(qDorm.id));
+
 
         BooleanExpression groupBySearch;
         // 검색 조건에 따른 필터 만들기
@@ -174,12 +211,8 @@ public class SearchRepoImpl implements SearchRepo {
                         Projections.constructor(RoomDto.class,
                                 qRoom.id,
                                 qRoom.person,
-                                qRoom.price)
-                        // review rate
-                        /*Projections.constructor(ReivewDto.class,
-                                qReview.id,
-                                qReview.rate,
-                                qReview.booking)*/
+                                qRoom.price),
+                        groupByReview.exists().as("averageRating")
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
@@ -202,12 +235,6 @@ public class SearchRepoImpl implements SearchRepo {
         LocalDateTime checkOut = filterDto.getSearchDto().getCheckOut();
         int person = filterDto.getSearchDto().getPerson();
 
-        QDorm subDorm = new QDorm("subDorm");
-        QRoom subRoom = new QRoom("subRoom");
-        QBooking subBooking = new QBooking("subBooking");
-        QAmenity subAmenity = new QAmenity("subAmenity");
-        QDamenity subDamenity = new QDamenity("subDamenity");
-
         // checkIn, checkOut 날짜에 예약 없는 방 보여주기
         JPQLQuery<Long> groupByDate = JPAExpressions
                 .select(subBooking.room.id)
@@ -221,6 +248,14 @@ public class SearchRepoImpl implements SearchRepo {
                 .from(subRoom)
                 .where(subRoom.dorm.id.eq(qDorm.id))
                 .groupBy(subRoom.dorm.id);
+
+        // 호텔 기준으로 리뷰 평점 구하기
+        JPQLQuery<Double> groupByReview = JPAExpressions
+                .select(subReview.rate.avg())
+                .from(subReview)
+                .join(subBooking).on(subReview.booking.id.eq(subBooking.id))
+                .join(subRoom).on(subBooking.room.id.eq(subRoom.id))
+                .where(subRoom.dorm.id.eq(qDorm.id));
 
         // 검색 조건에 따른 필터 만들기
         BooleanExpression groupBySearch;

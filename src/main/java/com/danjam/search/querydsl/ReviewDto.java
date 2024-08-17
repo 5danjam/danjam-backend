@@ -6,15 +6,16 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ReivewDto {
+public class ReviewDto {
     private Long id;
     private double rate;
-    private BookingDto bookingDto;
+//    private BookingDto bookingDto;
 
     @Builder
-    public ReivewDto(Long id, double rate, BookingDto bookingDto) {
+    public ReviewDto(Long id, double rate) {
+//    public ReivewDto(Long id, double rate, BookingDto bookingDto) {
         this.id = id;
         this.rate = rate;
-        this.bookingDto = bookingDto;
+//        this.bookingDto = bookingDto;
     }
 }

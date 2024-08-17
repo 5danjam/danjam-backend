@@ -2,6 +2,8 @@ package com.danjam.search;
 
 import com.danjam.search.querydsl.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,19 @@ public class SearchController {
         return ResponseEntity.ok(resultMap);
     }
 
+    /*@GetMapping("/showAll")
+    public ResponseEntity<Map<String, Object>> getDorms(Pageable pageable) {
+        Map<String, Object> resultMap = new HashMap();
+        Page<DormDto> list = (Page<DormDto>) searchService.findAllList();
+        if (list.isEmpty()) {
+            resultMap.put("result", "fail");
+            resultMap.put("dormList", null);
+        } else {
+            resultMap.put("result", "success");
+            resultMap.put("dormList", list);
+        }
+        return ResponseEntity.ok(resultMap);
+    }*/
     @GetMapping("/showAll")
     public ResponseEntity<Map<String, Object>> showList() {
         Map<String, Object> resultMap = new HashMap();
