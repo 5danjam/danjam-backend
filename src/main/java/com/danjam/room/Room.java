@@ -42,7 +42,7 @@ public class Room {
     private List<RoomImg> images;
 
     @Builder
-    public Room(String name, String description,  int person, int price,String type, Dorm dorm) {
+    public Room(String name, String description, int person, int price, String type, Dorm dorm) {
         this.name = name;
         this.description = description;
         this.person = person;

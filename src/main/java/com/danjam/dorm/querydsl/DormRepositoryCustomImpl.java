@@ -1,25 +1,14 @@
 package com.danjam.dorm.querydsl;
 
-import com.danjam.booking.querydsl.DormBookingDTO;
 import com.danjam.booking.QBooking;
+import com.danjam.booking.querydsl.DormBookingDTO;
 import com.danjam.dorm.QDorm;
 import com.danjam.room.QRoom;
 import com.danjam.room.RoomDTO;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.danjam.d_category.Dcategory;
-import com.danjam.d_category.DcategoryListDTO;
-import com.danjam.d_category.QDcategory;
-import com.danjam.dorm.Dorm;
 import com.danjam.users.QUsers;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.danjam.users.Users;
-import com.danjam.users.UsersDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -51,7 +40,7 @@ public class DormRepositoryCustomImpl implements DormRepositoryCustom {
                                 booking.id,
                                 booking.checkIn,
                                 booking.checkOut,
-                                user.name))) 
+                                user.name)))
                 .from(dorm)
                 .join(dorm.rooms, room)
                 .join(room.bookings, booking)

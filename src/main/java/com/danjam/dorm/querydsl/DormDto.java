@@ -1,10 +1,5 @@
 package com.danjam.dorm.querydsl;
 
-import com.danjam.d_category.Dcategory;
-import com.danjam.dorm.Dorm;
-import com.danjam.users.Users;
-import com.danjam.users.UsersDto;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class DormDto {
     private Long id;
     private String name;
-//    private String contactNum;
+    //    private String contactNum;
 //    private String city;
 //    private String town;
     private String address;
