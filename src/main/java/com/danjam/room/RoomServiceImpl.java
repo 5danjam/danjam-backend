@@ -2,16 +2,20 @@ package com.danjam.room;
 
 import com.danjam.dorm.Dorm;
 import com.danjam.dorm.DormRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class RoomServiceImpl implements RoomService {
+public class RoomServiceImpl implements RoomRepositoryCustom{
 
     private final DormRepository DORMREPOSITORY;
     private final RoomRepository ROOMREPOSITORY;
@@ -35,4 +39,5 @@ public class RoomServiceImpl implements RoomService {
 
        return ROOMREPOSITORY.save(room).getId();
     }
+
 }

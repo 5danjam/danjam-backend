@@ -25,9 +25,9 @@ public class Room {
 
     private String name;
     private String description;
-    private int person;
-    private int price;
-    private String type;
+    private int person; //수용인원
+    private int price; 
+    private String type; //룸타입.
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dorm_id")

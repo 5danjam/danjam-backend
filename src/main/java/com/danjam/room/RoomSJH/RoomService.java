@@ -13,4 +13,7 @@ public interface RoomService {
 
     // 돔에 속한 객체에 룸 필드 다 갖고 오는거
     List<RoomDTO> getRoomByDormId(Long dormId);
+
+    List<Room> searchRooms(int person, String type);
+
 }

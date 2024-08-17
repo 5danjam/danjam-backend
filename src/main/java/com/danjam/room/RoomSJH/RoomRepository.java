@@ -14,6 +14,9 @@ public interface RoomRepository extends JpaRepository<Room,Long>, com.danjam.roo
 
     List<Room> findByDormId(Long dormId);
 
+
+    List<Room> findByPersonAndType(int person, String type);
+
 }
 
 
