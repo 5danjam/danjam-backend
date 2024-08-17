@@ -20,10 +20,13 @@ spring:
         format_sql: true
         highlight_sql: true
 
-logging:
+payments:
+  toss:
+    secret:
+      key: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6
+
   level:
     org.springframework.security: DEBUG
-#    org.springframework.web: DEBUG
-#    org.springframework.web.servlet: DEBUG
-#    org.springframework.web.filter: DEBUG
-
+#org.springframework.web: DEBUG
+#org.springframework.web.servlet: DEBUG
+#org.springframework.web.filter: DEBUG

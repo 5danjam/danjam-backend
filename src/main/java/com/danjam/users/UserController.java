@@ -2,19 +2,10 @@ package com.danjam.users;
 
 
 import com.danjam.logInSecurity.UserDetail;
-import com.danjam.users.Users;
-import com.danjam.users.UsersDto;
-import com.danjam.users.UsersService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -25,20 +16,19 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/users")
+@RequestMapping("/users/")
 public class UserController {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final UsersService usersService;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserController(UsersService usersService, BCryptPasswordEncoder passwordEncoder) {
         this.usersService = usersService;
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/validate")
+    @PostMapping("validate")
     public Map<String, Object> validate(@RequestBody String email) {
         Map<String, Object> resultMap = new HashMap<>();
         // 값 이상하게 넘어와서 replace 해줌
@@ -53,7 +43,7 @@ public class UserController {
         return resultMap;
     }
 
-    @PostMapping("/signUp")
+    @PostMapping("signUp")
     public HashMap<String, Object> signUp(@RequestBody UsersDto usersDto) {
         HashMap<String, Object> resultMap = new HashMap<>();
         System.out.println("회원가입 접속");
@@ -70,7 +60,7 @@ public class UserController {
         return resultMap;
     }
 
-    @RequestMapping("/authSuccess")
+    @RequestMapping("authSuccess")
     public ResponseEntity<Map<String, Object>> authSuccess(@AuthenticationPrincipal UserDetail userDetail) {
         HashMap<String, Object> response = new HashMap<>();
         Users user = userDetail.getUser();
@@ -83,7 +73,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping("/authFailure")
+    @RequestMapping("authFailure")
     public ResponseEntity<Map<String, Object>> authFailure() {
         HashMap<String, Object> response = new HashMap<>();
 
@@ -109,7 +99,7 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<UsersDto> findById(@PathVariable Long id) {
         Users findByUser = usersService.findById(id);
         if (findByUser == null) {
@@ -122,9 +112,8 @@ public class UserController {
     }
 
     @Transactional
-    @PatchMapping("/{id}")
+    @PatchMapping("{id}")
     public ResponseEntity<UsersDto> changePassword(@PathVariable Long id, @RequestBody Map<String, String> requestMap) {
-        log.info("password: {}", requestMap);
         Users findByUser = usersService.findById(id);
         if (findByUser == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -138,7 +127,7 @@ public class UserController {
     }
 
     @Transactional
-    @PatchMapping("/{id}/phone")
+    @PatchMapping("{id}/phone")
     public ResponseEntity<Void> changePhone(@PathVariable Long id, @RequestBody Map<String, Integer> requestMap) {
         Users findByUser = usersService.findById(id);
         if (findByUser == null) {
@@ -152,7 +141,7 @@ public class UserController {
     }
 
     @Transactional
-    @PatchMapping("/{id}/cancel")
+    @PatchMapping("{id}/cancel")
     public ResponseEntity<Void> cancelMember(@PathVariable Long id) {
         Users findByUser = usersService.findById(id);
         if (findByUser == null) {
@@ -162,5 +151,12 @@ public class UserController {
         usersService.cancel(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("UsersList")
+    public ResponseEntity<List<Users>> findUsersList() {
+        List<Users> userList = usersService.findUsersList();
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 }

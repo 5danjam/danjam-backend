@@ -8,7 +8,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -25,14 +24,14 @@ public class Users {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Setter(AccessLevel.PACKAGE)
+    @Setter
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Setter(AccessLevel.PACKAGE)
+    @Setter
     @Column(name = "phone_number", nullable = false)
     private int phoneNum;
 

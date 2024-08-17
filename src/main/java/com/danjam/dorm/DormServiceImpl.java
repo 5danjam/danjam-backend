@@ -1,20 +1,15 @@
 package com.danjam.dorm;
 
+import com.danjam.d_amenity.DamenityRepository;
 import com.danjam.d_category.Dcategory;
-import com.danjam.review.ReviewRepository;
-import com.danjam.room.Room;
-import com.danjam.room.RoomDTO;
-import com.danjam.room.RoomRepository;
-import com.danjam.roomImg.RoomImgDTO;
+import com.danjam.dorm.querydsl.DormBookingListDTO;
 import com.danjam.roomImg.RoomImgRepository;
 import com.danjam.users.Users;
 import com.danjam.d_category.DcategoryRepository;
 import com.danjam.users.UsersRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,16 +24,21 @@ public class DormServiceImpl implements DormService {
     private final UsersRepository USERSREPOSITORY;
     private final DcategoryRepository DCATEGORYREPOSITORY;
     private final RoomImgRepository ROOMIMGREPOSITORY;
-    private final ReviewRepository REVIEWREPOSITORY;
-    private final RoomRepository ROOMREPOSITORY;
+    private final DamenityRepository DAMENITYREPOSITORY;
 
     @Transactional
     @Override
     public Long insert(DormAddDTO dormAddDTO) {
+
+        boolean exists = DORMREPOSITORY.existsByAddress(dormAddDTO.getAddress());
+
+        if (exists) {
+            System.out.println("중복 발생");
+            throw new RuntimeException("A Dorm with this address already exists");
+        }
+
         Optional<Users> usersOptional = USERSREPOSITORY.findById(dormAddDTO.getUsersId());
         Optional<Dcategory> dCategoryOptional = DCATEGORYREPOSITORY.findById(dormAddDTO.getCategoryId());
-
-        System.out.println("dCategoryOptional : " + dCategoryOptional);
 
         Users user = usersOptional.orElseThrow(() -> new RuntimeException("User not found"));
         Dcategory dcategory = dCategoryOptional.orElseThrow(() -> new RuntimeException("Dcategory not found"));
@@ -54,46 +54,78 @@ public class DormServiceImpl implements DormService {
                 .user(user)
                 .build();
 
-        return DORMREPOSITORY.save(dorm).getId();
+       return DORMREPOSITORY.save(dorm).getId();
+    }
+    @Transactional
+    public List<DormListDTO> findByUser(Long id) {
+        Optional<Users> usersOptional = USERSREPOSITORY.findById(id);
+        Users user = usersOptional.orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Dorm> dorms = DORMREPOSITORY.findByUser(user);
+
+        return dorms.stream()
+                .map(dorm -> {
+                    List<String> roomImgNames = ROOMIMGREPOSITORY.findRoomImgNamesByDormId(dorm.getId());
+                    return new DormListDTO(
+                            dorm.getId(),
+                            dorm.getName(),
+                            dorm.getDescription(),
+                            dorm.getContactNum(),
+                            dorm.getCity(),
+                            dorm.getTown(),
+                            dorm.getAddress(),
+                            dorm.getStatus(),
+                            roomImgNames
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
-//    public Page<Dorm> getDorms(Pageable pageable) {
-//        return DORMREPOSITORY.findAll(pageable);
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public Page<DormDTO> searchDorms(Pageable pageable, String city, Integer person, Integer minPrice, Integer maxPrice, String type) {
-//        Page<Dorm> dorms;
-//
-//        if (city != null || person != null || minPrice != null || maxPrice != null || type != null) {
-//            dorms = DORMREPOSITORY.findAll(pageable);
-//        } else {
-//            dorms = DORMREPOSITORY.findAll(pageable);
-//        }
-//
-//        return dorms.map(dorm -> {
-//            List<Room> rooms = ROOMREPOSITORY.findByDorm(dorm).stream()
-//                    .filter(room -> (person == null || room.getPerson() >= person) &&
-//                            (minPrice == null || room.getPrice() >= minPrice) &&
-//                            (maxPrice == null || room.getPrice() <= maxPrice) &&
-//                            (type == null || room.getType().equals(type)))
-//                    .toList();
-//
-//            List<RoomDTO> roomDTOs = rooms.stream()
-//                    .map(room -> {
-//                        List<RoomImgDTO> roomImgDTOs = ROOMIMGREPOSITORY.findByRoom(room).stream()
-//                                .map(RoomImgDTO::new)
-//                                .collect(Collectors.toList());
-//                        return new RoomDTO(room, roomImgDTOs);
-//                    })
-//                    .collect(Collectors.toList());
-//
-//            Double averageRating = REVIEWREPOSITORY.findAverageRatingByDormId(dorm.getId());
-//            Integer lowestPrice = ROOMREPOSITORY.findLowestRoomPriceByDormId(dorm.getId());
-//
-//            return new DormDTO(dorm, averageRating, lowestPrice, roomDTOs);
-//        });
-//    }
+    @Transactional
+    public List<DormBookingListDTO> findBookingsBySellerId(Long id) {
+        return DORMREPOSITORY.findBookingsBySellerId(id);
+    }
 
+    public boolean deleteDorm(Long dormId) {
 
+        if (DORMREPOSITORY.existsById(dormId)) {
+            DORMREPOSITORY.deleteById(dormId);
+            return true;
+        }
+        return false;
+    }
+
+    public List<DormListDTO> findByStatus() {
+
+        String status = "N";
+
+        List<Dorm> dorms = DORMREPOSITORY.findByStatus(status);
+
+        return dorms.stream()
+                .map(dorm -> {
+                    List<String> roomImgNames = ROOMIMGREPOSITORY.findRoomImgNamesByDormId(dorm.getId());
+                    return new DormListDTO(
+                            dorm.getId(),
+                            dorm.getName(),
+                            dorm.getDescription(),
+                            dorm.getContactNum(),
+                            dorm.getCity(),
+                            dorm.getTown(),
+                            dorm.getAddress(),
+                            dorm.getStatus(),
+                            roomImgNames
+                    );
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void updateDorms(List<Long> dormIds) {
+        System.out.println("dormIds: "+dormIds);
+        List<Dorm> dormsToUpdate = DORMREPOSITORY.findAllById(dormIds);
+
+        for (Dorm dorm : dormsToUpdate) {
+            dorm.setStatus("Y");
+        }
+        DORMREPOSITORY.saveAll(dormsToUpdate);
+    }
 }

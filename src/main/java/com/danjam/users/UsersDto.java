@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsersDto {
@@ -21,14 +21,6 @@ public class UsersDto {
     private String status;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
-
-    @Builder
-    public UsersDto(Long id, String email, String name, int phoneNum) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.phoneNum = phoneNum;
-    }
 
     public Users toEntity() {
         return Users.builder()
