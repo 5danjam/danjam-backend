@@ -1,3 +1,4 @@
+/*
 package com.danjam.config;
 
 import org.springframework.context.annotation.Bean;
@@ -20,4 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
     }
 
+
+
 }
+*/
