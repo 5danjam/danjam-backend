@@ -141,8 +141,8 @@ public class SearchRepoImpl implements SearchRepo {
                 .where(subRoom.dorm.id.eq(qDorm.id))
                 .groupBy(subRoom.dorm.id);
 
-        BooleanExpression groupBySearch;
         // 검색 조건에 따른 필터 만들기
+        BooleanExpression groupBySearch;
         if (searchDto.getCity().equalsIgnoreCase("선택")) { // 도시를 선택하지 않았을 경우
             groupBySearch = qRoom.id.notIn(groupByDate)
                     .and(qRoom.price.eq(groupByDorm))
