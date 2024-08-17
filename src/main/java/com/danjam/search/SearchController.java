@@ -51,7 +51,6 @@ public class SearchController {
         Map<String, Object> resultMap = new HashMap();
 
         List<DormDto> list = searchService.findAllList();
-//        List<Tuple> list = searchService.findAllList();
         System.out.println("findAllList: "+list);
         if (list.isEmpty()) {
             resultMap.put("result", "fail");
