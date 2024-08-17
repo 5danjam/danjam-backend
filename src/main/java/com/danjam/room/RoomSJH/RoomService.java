@@ -5,6 +5,7 @@ import java.util.Optional;
 
 public interface RoomService {
 
+
     // Room getRoomById(Long id);
     List<Long> getRoomIdsByDormId(Long dormId);
 
