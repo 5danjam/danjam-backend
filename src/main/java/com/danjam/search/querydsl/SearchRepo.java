@@ -1,6 +1,7 @@
 package com.danjam.search.querydsl;
 
 import com.danjam.search.SearchDto;
+import com.querydsl.core.Tuple;
 
 import java.util.List;
 

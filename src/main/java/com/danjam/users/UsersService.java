@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UsersService {
+public class    UsersService {
     private final UsersRepository usersRepository;
 
     public UsersService(UsersRepository usersRepository) {
@@ -25,5 +25,12 @@ public class UsersService {
 
     public List<Users> findUsersList() { return usersRepository.findAll(); }
 
+    public Users findById(long id) {
+        return usersRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 
+    public void cancel(long id) {
+        usersRepository.cancel(id);
+    }
 }
