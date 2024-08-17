@@ -2,6 +2,7 @@ package com.danjam.room;
 
 import com.danjam.booking.Booking;
 import com.danjam.dorm.Dorm;
+import com.danjam.roomImg.RoomImg;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -36,6 +37,9 @@ public class Room {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Booking> bookings;
+
+    @OneToMany(mappedBy = "room")
+    private List<RoomImg> images;
 
     @Builder
     public Room(String name, String description,  int person, int price,String type, Dorm dorm) {

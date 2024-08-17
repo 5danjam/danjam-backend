@@ -3,8 +3,10 @@ package com.danjam.search;
 import com.danjam.search.querydsl.DormDto;
 import com.danjam.search.querydsl.FilterDto;
 import com.danjam.search.querydsl.SearchRepo;
+import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

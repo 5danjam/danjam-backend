@@ -53,7 +53,8 @@ public class Dorm {
 
     @Builder
 //    public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status) {
-    public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status, List<Room> rooms) {
+    public Dorm(Long id,String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status, List<Room> rooms) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.contactNum = contactNum;
