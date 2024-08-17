@@ -1,14 +1,8 @@
 package com.danjam.search.querydsl;
 
-import com.danjam.roomImg.RoomImg;
-import com.danjam.roomImg.RoomImgAddDTO;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collector;
 
 @Data
 @Builder

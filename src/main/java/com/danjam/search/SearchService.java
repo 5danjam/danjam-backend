@@ -24,9 +24,6 @@ public class SearchService {
     public List<DormDto> findAllList() {
         return searchRepo.findAllList();
     }
-//    public List<Tuple> findAllList() {
-//        return searchRepo.findAllList();
-//    }
 
     public List<String> findByCity(String city) {
         return searchRepo.findByCity(city);
