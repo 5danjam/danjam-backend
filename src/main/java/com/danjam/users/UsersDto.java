@@ -1,13 +1,14 @@
 package com.danjam.users;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsersDto {
@@ -32,6 +33,15 @@ public class UsersDto {
                 .status(status)
                 .createAt(createAt)
                 .updateAt(updateAt)
+                .build();
+    }
+
+    public static UsersDto fromEntity(final Users user) {
+        return UsersDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .phoneNum(user.getPhoneNum())
                 .build();
     }
 }

@@ -2,12 +2,12 @@ package com.danjam.users;
 
 
 import com.danjam.logInSecurity.UserDetail;
-import com.danjam.users.querydsl.UsersListDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import java.util.Map;
 @CrossOrigin
 @RequestMapping("/users/")
 public class UserController {
+
     private final UsersService usersService;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -88,6 +89,69 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping
+    public ResponseEntity<List<UsersDto>> findAll() {
+        List<UsersDto> users = usersService.findAll()
+                .stream()
+                .map(UsersDto::fromEntity)
+                .toList();
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<UsersDto> findById(@PathVariable Long id) {
+        Users findByUser = usersService.findById(id);
+        if (findByUser == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        UsersDto user = UsersDto.fromEntity(findByUser);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Transactional
+    @PatchMapping("{id}")
+    public ResponseEntity<UsersDto> changePassword(@PathVariable Long id, @RequestBody Map<String, String> requestMap) {
+        Users findByUser = usersService.findById(id);
+        if (findByUser == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        findByUser.setPassword(passwordEncoder.encode(requestMap.get("password")));
+        usersService.save(findByUser);
+        UsersDto user = UsersDto.fromEntity(findByUser);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Transactional
+    @PatchMapping("{id}/phone")
+    public ResponseEntity<Void> changePhone(@PathVariable Long id, @RequestBody Map<String, Integer> requestMap) {
+        Users findByUser = usersService.findById(id);
+        if (findByUser == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        findByUser.setPhoneNum(requestMap.get("phoneNum"));
+        usersService.save(findByUser);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Transactional
+    @PatchMapping("{id}/cancel")
+    public ResponseEntity<Void> cancelMember(@PathVariable Long id) {
+        Users findByUser = usersService.findById(id);
+        if (findByUser == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        usersService.cancel(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping("UsersList")
     public ResponseEntity<List<Users>> findUsersList() {
