@@ -2,6 +2,8 @@ package com.danjam.search;
 
 import com.danjam.search.querydsl.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,12 +71,12 @@ public class SearchController {
     }
 
     @PostMapping("/search/filter")
-    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody FilterDto filterDto) {
+    public ResponseEntity<Map<String, Object>> searchByCondition(@RequestBody FilterDto filterDto, Pageable pageable) {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/search/amenity");
         System.out.println(filterDto);
         Map<String, Object> resultMap = new HashMap();
 
-        List<DormDto> list = searchService.findByFilter(filterDto);
+        Page<DormDto> list = searchService.findByFilter(filterDto, pageable);
         System.out.println("filterList: " + list);
 
         if (list.isEmpty()) {

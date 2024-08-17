@@ -15,7 +15,11 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -192,7 +196,7 @@ public class SearchRepoImpl implements SearchRepo {
     }
 
     @Override
-    public List<DormDto> findByFilter(FilterDto filterDto) {
+    public Page<DormDto> findByFilter(FilterDto filterDto, Pageable pageable) {
         System.out.println("findByAmenity");
         System.out.println(filterDto.getSearchDto());
         System.out.println(filterDto.getAmenities());
@@ -273,8 +277,8 @@ public class SearchRepoImpl implements SearchRepo {
                     .where(qDorm.id.in(groupByTown).and(qDorm.id.in(groupByDamenity)));
         }
 
-
-        return queryFactory
+        // 메인 쿼리 작성
+        JPQLQuery<DormDto> query = queryFactory
                 .select(Projections.constructor(DormDto.class,
                         qDorm.id,
                         qDorm.name,
@@ -294,27 +298,6 @@ public class SearchRepoImpl implements SearchRepo {
                                 qRoom.id,
                                 qRoom.person,
                                 qRoom.price)
-//                        queryFactory.select(Projections.constructor(RoomDto.class,
-//                                qRoom.id,
-//                                qRoom.person,
-//                                qRoom.price))
-//                                .from(qRoom).where(minPrice.having(qRoom.price.eq(qRoom.price.min()))).groupBy(qRoom.dorm.id)
-//                                Projections.constructor(CategoryDto.class,
-//                                qDcategory.id,
-//                                qDcategory.name),
-//                        Projections.constructor(UserDto.class,
-//                                qUsers.id,
-//                                qUsers.name,
-//                                qUsers.role),
-//                        list(Projections.constructor(RoomDto.class,
-//                                qRoom.id,
-//                                qRoom.person,
-//                                qRoom.price,
-//                                list(Projections.constructor(BookingDto.class,
-//                                        qBooking.id,
-//                                        qBooking.checkIn,
-//                                        qBooking.checkOut
-//                                ))))
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
@@ -323,7 +306,15 @@ public class SearchRepoImpl implements SearchRepo {
                 .where(
                         groupBySearch,
                         qDorm.id.in(groupByFilter)
-                )
+                );
+
+        // 페이징 적용
+        long total = query.fetchCount();
+        List<DormDto> results = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        return new PageImpl<>(results, pageable, total);
     }
 }

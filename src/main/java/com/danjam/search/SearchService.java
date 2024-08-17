@@ -5,6 +5,8 @@ import com.danjam.search.querydsl.FilterDto;
 import com.danjam.search.querydsl.SearchRepo;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +29,8 @@ public class SearchService {
         return searchRepo.findByCity(city);
     }
 
-    public List<DormDto> findByFilter(FilterDto filterDto) {
-        return searchRepo.findByFilter(filterDto);
+    public Page<DormDto> findByFilter(FilterDto filterDto, Pageable pageable) {
+        return searchRepo.findByFilter(filterDto, pageable);
     }
 
 }
