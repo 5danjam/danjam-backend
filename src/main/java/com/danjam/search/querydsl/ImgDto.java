@@ -8,16 +8,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ImgDto {
+    private Long id;
     private String name;
-    private String nameOriginal;
-    private String size;
     private String ext;
 
     @Builder
-    public ImgDto(String name, String nameOriginal, String size, String ext) {
+    public ImgDto(Long id, String name, String ext) {
+        this.id = id;
         this.name = name;
-        this.nameOriginal = nameOriginal;
-        this.size = size;
         this.ext = ext;
     }
 }

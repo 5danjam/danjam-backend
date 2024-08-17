@@ -1,6 +1,5 @@
 package com.danjam.search.querydsl;
 
-import com.danjam.amenity.QAmenity;
 import com.danjam.booking.QBooking;
 import com.danjam.d_amenity.QDamenity;
 import com.danjam.d_category.QDcategory;
@@ -8,9 +7,9 @@ import com.danjam.dorm.QDorm;
 import com.danjam.review.QReview;
 import com.danjam.room.QRoom;
 import com.danjam.roomImg.QRoomImg;
-import com.danjam.roomImg.RoomImgAddDTO;
 import com.danjam.search.SearchDto;
 import com.danjam.users.QUsers;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -39,62 +38,83 @@ public class SearchRepoImpl implements SearchRepo {
 
     QDorm subDorm = new QDorm("subDorm");
     QRoom subRoom = new QRoom("subRoom");
+    QRoomImg subImg = new QRoomImg("subImg");
     QReview subReview = new QReview("subReview");
     QBooking subBooking = new QBooking("subBooking");
     QDamenity subDamenity = new QDamenity("subDamenity");
 
-    /*private final QRoom subRoom = new QRoom("subRoom");
-
-    private final JPQLQuery<Integer> groupByDorm = JPAExpressions
+    // 서브쿼리
+    // 방 최저가 찾기
+    JPQLQuery<Integer> groupByDorm = JPAExpressions
             .select(subRoom.price.min())
             .from(subRoom)
             .where(subRoom.dorm.id.eq(qDorm.id))
             .groupBy(subRoom.dorm.id);
 
-    private JPQLQuery<DormDto> dormList = queryFactory
-            .select(Projections.constructor(DormDto.class,
-                    qDorm.id,
-                    qDorm.name,
-                    qDorm.description,
-                    qDorm.contactNum,
-                    qDorm.city,
-                    qDorm.town,
-                    qDorm.address,
-                    Projections.constructor(CategoryDto.class,
-                            qDcategory.id,
-                            qDcategory.name),
-                    Projections.constructor(UserDto.class,
-                            qUsers.id,
-                            qUsers.name,
-                            qUsers.role),
-                    Projections.constructor(RoomDto.class,
-                            qRoom.id,
-                            qRoom.person,
-                            qRoom.price)
-            ))
-            .from(qDorm)
-            .join(qDorm.dcategory, qDcategory)
-            .join(qDorm.user, qUsers)
-            .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id));*/
+    // 호텔 기준으로 리뷰 평점 구하기
+    JPQLQuery<Double> groupByReview = JPAExpressions
+            .select(subReview.rate.avg())
+            .from(subReview)
+            .join(subBooking).on(subReview.booking.id.eq(subBooking.id))
+            .join(subRoom).on(subBooking.room.id.eq(subRoom.id))
+            .where(subRoom.dorm.id.eq(qDorm.id));
 
     @Override
     public List<DormDto> findAllList() {
-        // 방 최저가
-        JPQLQuery<Integer> groupByDorm = JPAExpressions
-                .select(subRoom.price.min())
-                .from(subRoom)
-                .where(subRoom.dorm.id.eq(qDorm.id))
-                .groupBy(subRoom.dorm.id);
+        /*List<ImgDto> groupImg = JPAExpressions
+                .select(Projections.fields(ImgDto.class,
+                        qRoomImg.id,
+                        qRoomImg.name,
+                        qRoomImg.ext))
+                .from(qRoomImg)
+                .where(qRoomImg.room.id.eq(qRoom.id)).fetch();
+        List<RoomDto> dormList = groupImg.stream()
+                .map(r -> new RoomDto(r.))
+                .collect(Collectors.toList());*/
 
-        // 호텔 기준으로 리뷰 평점 구하기
-        JPQLQuery<Double> groupByReview = JPAExpressions
-                .select(subReview.rate.avg())
-                .from(subReview)
-                .join(subBooking).on(subReview.booking.id.eq(subBooking.id))
-                .join(subRoom).on(subBooking.room.id.eq(subRoom.id))
-                .where(subRoom.dorm.id.eq(qDorm.id));
+        JPQLQuery<Long> groupImg = JPAExpressions
+                .select(subImg.id)
+                .from(subImg)
+                .where(subImg.room.id.eq(qRoom.id))
+                .groupBy(subImg.room.id);
 
-        return queryFactory
+        /*JPQLQuery<ImgDto> groupImg = JPAExpressions
+                .select(Projections.constructor(ImgDto.class,
+                        subImg.id,
+                        subImg.name,
+                        subImg.ext))
+                .from(subImg)
+                .where(subImg.room.id.eq(qRoom.id))
+                .groupBy(subImg.room.id);*/
+
+        /*JPQLQuery<ImgDto> groupImg = (JPQLQuery<ImgDto>) JPAExpressions
+                .select(Projections.constructor(ImgDto.class,
+                        qRoomImg.id,
+                        qRoomImg.name,
+                        qRoomImg.ext))
+                .from(qRoomImg)
+                .where(qRoomImg.room.id.eq(qRoom.id)).fetchOne();*/
+
+        /*List<ImgDto> groupImg = JPAExpressions
+                .select(Projections.constructor(ImgDto.class,
+                        qRoomImg.id,
+                        qRoomImg.name,
+                        qRoomImg.ext))
+                .from(qRoomImg)
+                .where(qRoomImg.room.id.eq(qRoom.id))
+                .fetch();*/
+
+        /*JPQLQuery<List<ImgDto>> groupImg = JPAExpressions
+                .select(list(Projections.constructor(ImgDto.class,
+                        qRoomImg.id,
+                        qRoomImg.name,
+                        qRoomImg.ext)))
+                .from(qRoomImg)
+                .where(qRoomImg.room.id.eq(qRoom.id))
+                .groupBy(qRoom.id);*/
+
+        // 영우형 버전
+        List<DormDto> dormDtoList = queryFactory
                 .select(Projections.constructor(DormDto.class,
                         qDorm.id,
                         qDorm.name,
@@ -113,25 +133,150 @@ public class SearchRepoImpl implements SearchRepo {
                         Projections.constructor(RoomDto.class,
                                 qRoom.id,
                                 qRoom.person,
-                                qRoom.price)
-                        ,
-//                        list(Projections.constructor(ImgDto.class,
-//                                qRoomImg.name,
-//                                qRoomImg.nameOriginal,
-//                                qRoomImg.size,
-//                                qRoomImg.ext)),
+                                qRoom.price,
+                                list(Projections.constructor(ImgDto.class,
+                                        qRoomImg.id,
+                                        qRoomImg.name,
+                                        qRoomImg.ext))),
                         groupByReview
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
                 .join(qDorm.user, qUsers)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
-//                .join(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
-//                .join(qReview).on(qDorm.id.eq(qReview.booking.room.dorm.id))
-//                .join(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
-                .where(qRoom.price.eq(groupByDorm))
-//                        ,qReview.rate.eq(groupByReview))
+                .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
+                .where(qRoom.price.eq(groupByDorm),
+                        qRoomImg.id.in(groupImg))
                 .fetch();
+
+        for (DormDto dormDto : dormDtoList) {
+            List<RoomDto> roomDtos = queryFactory
+                    .select(Projections.constructor(RoomDto.class,
+                            qRoom.id,
+                            qRoom.person,
+                            qRoom.price,
+                            list(Projections.constructor(ImgDto.class,
+                                    qRoomImg.id,
+                                    qRoomImg.name,
+                                    qRoomImg.ext))
+                            // 이미지 리스트는 포함하지 않음
+                    ))
+                    .from(qRoom)
+                    .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
+                    .where(qRoom.dorm.id.eq(dormDto.getId()))
+                    .fetch();
+
+            for (RoomDto roomDto : roomDtos) {
+                List<ImgDto> images = queryFactory
+                        .select(Projections.constructor(ImgDto.class,
+                                qRoomImg.id,
+                                qRoomImg.name,
+                                qRoomImg.ext
+                        ))
+                        .from(qRoomImg)
+                        .where(qRoomImg.room.id.eq(roomDto.getId()))
+                        .fetch();
+
+                roomDto.setImages(images);
+                dormDto.setRoom(roomDto);
+            }
+        }
+        /* List<DormDto> dormDtoList = queryFactory
+                .select(Projections.constructor(DormDto.class,
+                                qDorm.id,
+                                qDorm.name,
+                                qDorm.description,
+                                qDorm.contactNum,
+                                qDorm.city,
+                                qDorm.town,
+                                qDorm.address,
+                                Projections.constructor(CategoryDto.class,
+                                        qDcategory.id,
+                                        qDcategory.name),
+                                Projections.constructor(UserDto.class,
+                                        qUsers.id,
+                                        qUsers.name,
+                                        qUsers.role),
+                                Projections.constructor(RoomDto.class,
+                                        qRoom.id,
+                                        qRoom.person,
+                                        qRoom.price,
+                                        list(Projections.constructor(ImgDto.class,
+                                                qRoomImg.id,
+                                                qRoomImg.name,
+                                                qRoomImg.ext))),
+                                groupByReview
+                        ))
+                        .from(qDorm)
+                        .join(qDorm.dcategory, qDcategory)
+                        .join(qDorm.user, qUsers)
+                        .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
+                        .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
+                        .where(qRoom.price.eq(groupByDorm),
+                                qRoomImg.id.in(groupImg))
+                        .fetch();*/
+
+
+        /*List<Room> roomDtos = queryFactory
+                .selectFrom(qRoom)
+                .join(qRoom.images, qRoomImg)
+                .fetch();
+
+        List<RoomDto> rooms = roomDtos.stream()
+                .map(room -> new RoomDto(room.getId(), room.getPerson(), room.getPrice(), room.getImages()))
+                .collect(Collectors.toList());
+        System.out.println("rooms : "+rooms);*/
+
+        // https://jojoldu.tistory.com/342
+        // 위에서 roomDto 사용해서 id랑 ㅇ미ㅣㅈ 묶어버리면 좋을거같당,,
+        // 아니면 dorm에다가 roomImages 직접적으로 넣어서 묶어버리면 위 블로그에서 한거 딱 될거같기도함
+        /*return dormDtoList.stream()
+                .map(dormDto -> new DormDto(dormDto.getId(), dormDto.getName(), dormDto.getDescription(), dormDto.getContactNum(),
+                        dormDto.getCity(), dormDto.getTown(), dormDto.getAddress(), dormDto.getDcategory(), dormDto.getUser(), dormDto.getRoom(), dormDto.getRate()))
+                .collect(Collectors.toList());*/
+        return dormDtoList;
+        /*queryFactory
+                .select(Projections.constructor(DormDto.class,
+                        qDorm.id,
+                        qDorm.name,
+                        qDorm.description,
+                        qDorm.contactNum,
+                        qDorm.city,
+                        qDorm.town,
+                        qDorm.address,
+                        Projections.constructor(CategoryDto.class,
+                                qDcategory.id,
+                                qDcategory.name),
+                        Projections.constructor(UserDto.class,
+                                qUsers.id,
+                                qUsers.name,
+                                qUsers.role),
+                        Projections.fields(RoomDto.class,
+                                qRoom.id,
+                                qRoom.person,
+                                qRoom.price,
+                                list(Projections.fields(ImgDto.class,
+                                        qRoomImg.id,
+                                        qRoomImg.name,
+                                        qRoomImg.ext))
+                                list(Projections.fields(ImgDto.class,
+                                        qRoomImg.id,
+                                        qRoomImg.name,
+                                        qRoomImg.ext))
+                        ),
+                        groupByReview
+                ))
+                .from(qDorm)
+                .join(qDorm.dcategory, qDcategory)
+                .join(qDorm.user, qUsers)
+                .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
+                .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
+//                .groupBy(qRoom.id)
+                .groupBy(qDorm.id, qDorm.name, qDorm.description, qDorm.contactNum, qDorm.city, qDorm.town, qDorm.address,
+                        qDcategory.id, qDcategory.name, qUsers.id, qUsers.name, qUsers.role,
+                        qRoom.id, qRoom.person, qRoom.price)
+                .where(qRoom.price.eq(groupByDorm))
+                .fetch();*/
     }
 
     // filter를 위한 townList
@@ -163,23 +308,9 @@ public class SearchRepoImpl implements SearchRepo {
                 .where(subBooking.checkIn.between(checkIn, checkOut),
                         subBooking.checkOut.between(checkIn, checkOut));
 
-        JPQLQuery<Integer> groupByDorm = JPAExpressions
-                .select(subRoom.price.min())
-                .from(subRoom)
-                .where(subRoom.dorm.id.eq(qDorm.id))
-                .groupBy(subRoom.dorm.id);
-
-        // 호텔 기준으로 리뷰 평점 구하기
-        JPQLQuery<Double> groupByReview = JPAExpressions
-                .select(subReview.rate.avg())
-                .from(subReview)
-                .join(subBooking).on(subReview.booking.id.eq(subBooking.id))
-                .join(subRoom).on(subBooking.room.id.eq(subRoom.id))
-                .where(subRoom.dorm.id.eq(qDorm.id));
-
-
-        BooleanExpression groupBySearch;
         // 검색 조건에 따른 필터 만들기
+        BooleanExpression groupBySearch;
+
         if (searchDto.getCity().equalsIgnoreCase("선택")) { // 도시를 선택하지 않았을 경우
             groupBySearch = qRoom.id.notIn(groupByDate)
                     .and(qRoom.price.eq(groupByDorm))
@@ -211,16 +342,17 @@ public class SearchRepoImpl implements SearchRepo {
                         Projections.constructor(RoomDto.class,
                                 qRoom.id,
                                 qRoom.person,
-                                qRoom.price),
-                        groupByReview.exists().as("averageRating")
+                                qRoom.price
+//                                ,list(groupImg)
+                        ),
+                        groupByReview
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
                 .join(qDorm.user, qUsers)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
-                .where(
-                        groupBySearch
-                )
+                .join(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
+                .where(groupBySearch)
                 .fetch();
     }
 
@@ -241,21 +373,6 @@ public class SearchRepoImpl implements SearchRepo {
                 .from(subBooking)
                 .where(subBooking.checkIn.between(checkIn, checkOut),
                         subBooking.checkOut.between(checkIn, checkOut));
-
-        // 가장 저렴한 가격 가진 방 보여주기
-        JPQLQuery<Integer> groupByDorm = JPAExpressions
-                .select(subRoom.price.min())
-                .from(subRoom)
-                .where(subRoom.dorm.id.eq(qDorm.id))
-                .groupBy(subRoom.dorm.id);
-
-        // 호텔 기준으로 리뷰 평점 구하기
-        JPQLQuery<Double> groupByReview = JPAExpressions
-                .select(subReview.rate.avg())
-                .from(subReview)
-                .join(subBooking).on(subReview.booking.id.eq(subBooking.id))
-                .join(subRoom).on(subBooking.room.id.eq(subRoom.id))
-                .where(subRoom.dorm.id.eq(qDorm.id));
 
         // 검색 조건에 따른 필터 만들기
         BooleanExpression groupBySearch;
@@ -308,7 +425,6 @@ public class SearchRepoImpl implements SearchRepo {
                     .where(qDorm.id.in(groupByTown).and(qDorm.id.in(groupByDamenity)));
         }
 
-
         return queryFactory
                 .select(Projections.constructor(DormDto.class,
                         qDorm.id,
@@ -328,33 +444,16 @@ public class SearchRepoImpl implements SearchRepo {
                         Projections.constructor(RoomDto.class,
                                 qRoom.id,
                                 qRoom.person,
-                                qRoom.price)
-//                        queryFactory.select(Projections.constructor(RoomDto.class,
-//                                qRoom.id,
-//                                qRoom.person,
-//                                qRoom.price))
-//                                .from(qRoom).where(minPrice.having(qRoom.price.eq(qRoom.price.min()))).groupBy(qRoom.dorm.id)
-//                                Projections.constructor(CategoryDto.class,
-//                                qDcategory.id,
-//                                qDcategory.name),
-//                        Projections.constructor(UserDto.class,
-//                                qUsers.id,
-//                                qUsers.name,
-//                                qUsers.role),
-//                        list(Projections.constructor(RoomDto.class,
-//                                qRoom.id,
-//                                qRoom.person,
-//                                qRoom.price,
-//                                list(Projections.constructor(BookingDto.class,
-//                                        qBooking.id,
-//                                        qBooking.checkIn,
-//                                        qBooking.checkOut
-//                                ))))
+                                qRoom.price
+//                                ,list(groupImg)
+                        ),
+                        groupByReview
                 ))
                 .from(qDorm)
                 .join(qDorm.dcategory, qDcategory)
                 .join(qDorm.user, qUsers)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
+                .join(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
                 .where(
                         groupBySearch,
                         qDorm.id.in(groupByFilter)
