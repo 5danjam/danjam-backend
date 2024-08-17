@@ -1,5 +1,6 @@
 package com.danjam.users;
 
+import com.danjam.users.querydsl.UsersListDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,5 +21,9 @@ public class UsersService {
         return usersRepository.findAll();
     }
 
-    public Users findByEmail(String email) {return usersRepository.findByEmail(email);}
+    public Users findByEmail(String email) { return usersRepository.findByEmail(email); }
+
+    public List<Users> findUsersList() { return usersRepository.findAll(); }
+
+
 }
