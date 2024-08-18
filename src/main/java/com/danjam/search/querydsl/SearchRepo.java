@@ -1,5 +1,6 @@
 package com.danjam.search.querydsl;
 
+import com.danjam.room.RoomDetailDTO;
 import com.danjam.search.SearchDto;
 import com.querydsl.core.Tuple;
 
@@ -13,4 +14,6 @@ public interface SearchRepo {
     List<String> findByCity(String city);
 
     List<DormDto> findByFilter(FilterDto filterDto);
+
+    List<RoomDetailDTO> findAllRoom(SearchDto searchDto, Long dormId);
 }

@@ -1,7 +1,5 @@
 package com.danjam.dorm;
 
-import com.danjam.booking.Booking;
-import com.danjam.room.Room;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +31,7 @@ public class DormListDTO {
     private List<String> roomImgNames;
 
 
-    public Dorm toEntity(){
+    public Dorm toEntity() {
         return Dorm.builder()
                 .id(id)
                 .name(name)

@@ -2,10 +2,10 @@ package com.danjam.dorm;
 
 import com.danjam.d_amenity.DamenityRepository;
 import com.danjam.d_category.Dcategory;
+import com.danjam.d_category.DcategoryRepository;
 import com.danjam.dorm.querydsl.DormBookingListDTO;
 import com.danjam.roomImg.RoomImgRepository;
 import com.danjam.users.Users;
-import com.danjam.d_category.DcategoryRepository;
 import com.danjam.users.UsersRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -54,8 +54,9 @@ public class DormServiceImpl implements DormService {
                 .user(user)
                 .build();
 
-       return DORMREPOSITORY.save(dorm).getId();
+        return DORMREPOSITORY.save(dorm).getId();
     }
+
     @Transactional
     public List<DormListDTO> findByUser(Long id) {
         Optional<Users> usersOptional = USERSREPOSITORY.findById(id);
@@ -120,12 +121,37 @@ public class DormServiceImpl implements DormService {
     }
 
     public void updateDorms(List<Long> dormIds) {
-        System.out.println("dormIds: "+dormIds);
+        System.out.println("dormIds: " + dormIds);
         List<Dorm> dormsToUpdate = DORMREPOSITORY.findAllById(dormIds);
 
         for (Dorm dorm : dormsToUpdate) {
             dorm.setStatus("Y");
         }
         DORMREPOSITORY.saveAll(dormsToUpdate);
+    }
+
+    @Override
+    public DormDTO getDormById(Long id) {
+        Dorm foundDorm = DORMREPOSITORY.findById(id)
+                .orElseThrow(() -> new RuntimeException("DormServiceImpl not found"));
+
+        if (foundDorm == null) {
+            throw new RuntimeException("돔 찾을 수 없음. 돔 서비스엘 임피엘 확인용");
+        }
+
+        List<String> dormImages = ROOMIMGREPOSITORY.findRoomImgNamesByDormId(foundDorm.getId());
+        System.out.println("dormImages" + dormImages);
+
+        return new DormDTO(
+                foundDorm.getId(),
+                foundDorm.getName(),
+                foundDorm.getDescription(),
+                foundDorm.getContactNum(),
+                foundDorm.getCity(),
+                foundDorm.getTown(),
+                foundDorm.getAddress(),
+                foundDorm.getStatus(),
+                dormImages
+        );
     }
 }

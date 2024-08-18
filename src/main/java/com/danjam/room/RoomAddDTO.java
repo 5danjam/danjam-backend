@@ -26,7 +26,7 @@ public class RoomAddDTO {
 
     private Long dormId;
 
-    public Room toEntity(){
+    public Room toEntity() {
         return Room.builder()
                 .name(name)
                 .description(description)

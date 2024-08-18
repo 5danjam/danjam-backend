@@ -35,7 +35,7 @@ public class DormAddDTO {
 
     private String status;
 
-    public Dorm toEntity(){
+    public Dorm toEntity() {
         return Dorm.builder()
                 .name(name)
                 .description(description)

@@ -3,8 +3,6 @@ package com.danjam.dorm;
 import com.danjam.d_category.Dcategory;
 import com.danjam.room.Room;
 import com.danjam.users.Users;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,7 +51,7 @@ public class Dorm {
 
     @Builder
 //    public Dorm(String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status) {
-    public Dorm(Long id,String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status, List<Room> rooms) {
+    public Dorm(Long id, String name, String description, String contactNum, String city, String town, String address, Users user, Dcategory dcategory, String status, List<Room> rooms) {
         this.id = id;
         this.name = name;
         this.description = description;
