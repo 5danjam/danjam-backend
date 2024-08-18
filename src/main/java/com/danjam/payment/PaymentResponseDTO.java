@@ -14,12 +14,15 @@ public record PaymentResponseDTO(
         String approvedAt
 ) {
     public Payment toEntity(final Users users) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(approvedAt, formatter);
+
         return Payment.builder()
                 .paymentKey(paymentKey)
                 .orderId(orderId)
                 .totalAmount(totalAmount)
                 .status(status)
-                .approvedAt(LocalDateTime.parse(approvedAt))
+                .approvedAt(zonedDateTime.toLocalDateTime())
                 .users(users)
                 .build();
     }
