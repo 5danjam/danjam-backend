@@ -69,8 +69,9 @@ public class PaymentService {
                 Payment payment = paymentResponseDTO.toEntity(user);
                 Payment savedPayment = paymentRepository.save(payment);
 
-                LocalDateTime checkIn = LocalDateTime.parse(paymentRequestDTO.checkIn());
-                LocalDateTime checkOut = LocalDateTime.parse(paymentRequestDTO.checkOut());
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime checkIn = LocalDateTime.parse(paymentRequestDTO.checkIn(), dateTimeFormatter);
+                LocalDateTime checkOut = LocalDateTime.parse(paymentRequestDTO.checkOut(), dateTimeFormatter);
 
                 Booking booking = Booking.builder()
                         .users(user)
