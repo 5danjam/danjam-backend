@@ -45,7 +45,7 @@ public class ReviewController {
     public ResponseEntity<Slice<ReviewDto>> findReviewsByDormId(
             @PathVariable Long id,
             @PageableDefault(size = 25)
-            @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
+            @SortDefault(sort = "created_at", direction = Sort.Direction.DESC)
             Pageable pageable) {
         Slice<ReviewDto> reviewDtoSlice = REVIEWSERVICE.findReviewsByDormId(id, pageable);
 

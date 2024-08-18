@@ -1,7 +1,12 @@
 package com.danjam.room;
 
+import com.danjam.search.querydsl.ImgDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 // Jackson 어떠한 데이터를 직렬화 할 때 json으로 변경시에 몇몇 값에 널이 있고,
@@ -20,6 +25,7 @@ public class RoomDetailDTO {
     private int person;
     private int price;
     private String type;
+    private List<ImgDto> images;
 
     public RoomDetailDTO(Room room) {
         this.id = room.getId();
@@ -28,5 +34,6 @@ public class RoomDetailDTO {
         this.person = room.getPerson();
         this.price = room.getPrice();
         this.type = room.getType();
+        this.images = new ArrayList<>();
     }
 }

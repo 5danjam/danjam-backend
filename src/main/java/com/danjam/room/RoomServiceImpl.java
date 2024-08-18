@@ -2,6 +2,9 @@ package com.danjam.room;
 
 import com.danjam.dorm.Dorm;
 import com.danjam.dorm.DormRepository;
+import com.danjam.search.SearchDto;
+import com.danjam.search.SearchService;
+import com.danjam.search.querydsl.RoomDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDetailDTO> getRoomByDormId(Long dormId) {
-        List<Room> rooms = ROOMREPOSITORY.findByDormId(dormId);
+    List<Room> rooms = ROOMREPOSITORY.findByDormId(dormId);
         return rooms.stream()
                 .map(RoomDetailDTO::new)
                 .toList();

@@ -1,8 +1,14 @@
 package com.danjam.dorm;
 
+import com.danjam.amenity.AmenityListDTO;
+import com.danjam.amenity.AmenityService;
 import com.danjam.dorm.querydsl.DormBookingListDTO;
 import com.danjam.room.RoomDetailDTO;
 import com.danjam.room.RoomService;
+import com.danjam.search.SearchDto;
+import com.danjam.search.SearchService;
+import com.danjam.search.querydsl.AmenityDto;
+import com.danjam.search.querydsl.RoomDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +24,7 @@ public class DormController {
 
     private final DormServiceImpl DORMSERVICE;
     private final RoomService ROOMSERVICE;
+    private final SearchService SEARCHSERVICE;
 
     @PostMapping("/dorm/insert")
     public ResponseEntity<HashMap<String, Object>> insert(@RequestBody DormAddDTO dormAddDTO) {
@@ -116,8 +123,8 @@ public class DormController {
     }
 
     //todo 0816일 02:39 호텔에 대한 상세정보
-    @GetMapping("/dorms/{id}")
-    public HashMap<String, Object> getDormById(@PathVariable Long id) {
+    @PostMapping("/dorms/{id}")
+    public HashMap<String, Object> getDormById(@PathVariable Long id, @RequestBody SearchDto searchDto) {
 
         HashMap<String, Object> resultController = new HashMap<>();
 
@@ -139,8 +146,13 @@ public class DormController {
             resultController.put("dormImages", dormImageURLs);  // URL 리스트를 resultController에 추가
 
             resultController.put("result", "success");
-            List<RoomDetailDTO> rooms = ROOMSERVICE.getRoomByDormId(id);
+            List<RoomDetailDTO> rooms = SEARCHSERVICE.findAllRoom(searchDto, id);
+            System.out.println("rooms: " + rooms);
             resultController.put("rooms", rooms);
+
+            List<AmenityListDTO> amenities = SEARCHSERVICE.findAmenity(id);
+            System.out.println("amenities: " + amenities);
+            resultController.put("amenities", amenities);
         } catch (Exception e) {
             e.printStackTrace();
             resultController.put("result", "fail");

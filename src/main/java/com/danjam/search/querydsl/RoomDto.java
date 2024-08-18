@@ -22,4 +22,11 @@ public class RoomDto {
         this.price = price;
         this.images = images;
     }
+
+    public <T, E> RoomDto(Long roomId, Object o, Object o1, Object o2, ArrayList<E> es) {
+        this.id = roomId;
+        this.person = o1.hashCode();
+        this.price = o2.hashCode();
+        this.images = new ArrayList<>();
+    }
 }

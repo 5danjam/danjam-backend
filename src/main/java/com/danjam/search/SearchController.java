@@ -46,11 +46,34 @@ public class SearchController {
         }
         return ResponseEntity.ok(resultMap);
     }*/
+//    @GetMapping("/showAll")
+//    public ResponseEntity<Map<String, Object>> findAllList() {
+//        Map<String, Object> resultMap = new HashMap();
+//
+//        List<DormDto> list = searchService.findAllList();
+//        // List<DormDto> list = searchService.findAllList();
+////        List<Tuple> list = searchService.findAllList();
+//        System.out.println("findAllList: "+list);
+//        if (list.isEmpty()) {
+//            resultMap.put("result", "fail");
+//            resultMap.put("dormList", null);
+//        } else {
+//            resultMap.put("result", "success");
+//            resultMap.put("dormList", list);
+//        }
+//
+//        System.out.println(searchService.findAllList());
+//
+//        return ResponseEntity.ok(resultMap);
+//    }
+
     @GetMapping("/showAll")
-    public ResponseEntity<Map<String, Object>> findAllList() {
+    public ResponseEntity<Map<String, Object>> findAllList(Pageable pageable) {
+        System.out.println("pageable: " + pageable);
         Map<String, Object> resultMap = new HashMap();
 
-        List<DormDto> list = searchService.findAllList();
+        Page<DormDto> list = searchService.findAllList(pageable);
+        // List<DormDto> list = searchService.findAllList();
 //        List<Tuple> list = searchService.findAllList();
         System.out.println("findAllList: "+list);
         if (list.isEmpty()) {
@@ -61,7 +84,7 @@ public class SearchController {
             resultMap.put("dormList", list);
         }
 
-        System.out.println(searchService.findAllList());
+        System.out.println("findAllList: " + searchService.findAllList(pageable));
 
         return ResponseEntity.ok(resultMap);
     }

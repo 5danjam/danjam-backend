@@ -68,6 +68,8 @@ public class UserController {
         response.put("result", "success");
         response.put("id", user.getId());
         response.put("name", user.getName());
+        response.put("email", user.getEmail());
+        response.put("phoneNum", user.getPhoneNum());
         response.put("role", user.getRole());
 
         return ResponseEntity.ok(response);
