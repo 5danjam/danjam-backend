@@ -1,10 +1,13 @@
 package com.danjam.dorm;
 
+import com.danjam.amenity.AmenityListDTO;
+import com.danjam.amenity.AmenityService;
 import com.danjam.dorm.querydsl.DormBookingListDTO;
 import com.danjam.room.RoomDetailDTO;
 import com.danjam.room.RoomService;
 import com.danjam.search.SearchDto;
 import com.danjam.search.SearchService;
+import com.danjam.search.querydsl.AmenityDto;
 import com.danjam.search.querydsl.RoomDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -145,8 +148,12 @@ public class DormController {
             resultController.put("result", "success");
 //            List<RoomDetailDTO> rooms = ROOMSERVICE.getRoomByDormId(id);
             List<RoomDetailDTO> rooms = SEARCHSERVICE.findAllRoom(searchDto, id);
-            System.out.println("rooms: "+rooms);
+            System.out.println("rooms: " + rooms);
             resultController.put("rooms", rooms);
+
+            List<AmenityListDTO> amenities = SEARCHSERVICE.findAmenity(id);
+            System.out.println("amenities: " + amenities);
+            resultController.put("amenities", amenities);
         } catch (Exception e) {
             e.printStackTrace();
             resultController.put("result", "fail");

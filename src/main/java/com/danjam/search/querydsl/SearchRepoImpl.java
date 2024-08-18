@@ -1,5 +1,7 @@
 package com.danjam.search.querydsl;
 
+import com.danjam.amenity.AmenityListDTO;
+import com.danjam.amenity.QAmenity;
 import com.danjam.booking.QBooking;
 import com.danjam.d_amenity.QDamenity;
 import com.danjam.d_category.QDcategory;
@@ -15,6 +17,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -36,6 +39,7 @@ public class SearchRepoImpl implements SearchRepo {
     private final QUsers qUsers = QUsers.users;
     private final QDcategory qDcategory = QDcategory.dcategory;
     private final QRoom qRoom = QRoom.room;
+    private final QAmenity qAmenity = QAmenity.amenity;
     private final QDamenity qDamenity = QDamenity.damenity;
     private final QReview qReview = QReview.review;
     private final QRoomImg qRoomImg = QRoomImg.roomImg;
@@ -51,10 +55,10 @@ public class SearchRepoImpl implements SearchRepo {
     // 서브쿼리
     // 방 최저가 찾기
     JPQLQuery<Integer> groupByDorm = JPAExpressions
-            .select(qRoom.price.min())
-            .from(qRoom)
-            .where(qRoom.dorm.id.eq(qDorm.id))
-            .groupBy(qRoom.dorm.id);
+            .select(subRoom.price.min())
+            .from(subRoom)
+            .where(subRoom.dorm.id.eq(qDorm.id))
+            .groupBy(subRoom.dorm.id);
 
     // 호텔 기준으로 리뷰 평점 구하기
     JPQLQuery<Double> groupByReview = JPAExpressions
@@ -112,6 +116,13 @@ public class SearchRepoImpl implements SearchRepo {
 
     @Override
     public List<DormDto> findAllList() {
+        JPAQuery<Long> subQuery = new JPAQuery<>();
+        subQuery
+                .select(subRoom.id)
+                .from(subRoom)
+                .where(subRoom.dorm.id.eq(qDorm.id))
+                .orderBy(subRoom.price.asc())
+                .limit(1);
         List<DormDto> dormDtoList = queryFactory
                 .select(Projections.constructor(DormDto.class,
                         qDorm.id,
@@ -143,8 +154,9 @@ public class SearchRepoImpl implements SearchRepo {
                 .join(qDorm.user, qUsers)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
                 .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
-                .where(qRoom.price.eq(groupByDorm))
+                .where(qRoom.id.in(subQuery))
                 .fetch();
+        System.out.println(dormDtoList);
 
         return removeDorm(dormDtoList);
     }
@@ -389,6 +401,7 @@ public class SearchRepoImpl implements SearchRepo {
                         qRoom.person.goe(person)
                         )
                 .fetch();
+        System.out.println("findAllRoom rooms:"+roomDtoList); // 여기서는 제대로 나옴
 
         for (RoomDetailDTO roomDto : roomDtoList) {
             List<ImgDto> images = queryFactory
@@ -415,5 +428,17 @@ public class SearchRepoImpl implements SearchRepo {
         }
 
         return new ArrayList<>(roomDtoMap.values());
+    }
+
+    @Override
+    public List<AmenityListDTO> findAmenity(Long dormId) {
+        return queryFactory
+                .select(Projections.constructor(AmenityListDTO.class,
+                        qAmenity.id,
+                        qAmenity.name))
+                .from(qAmenity)
+                .join(qDamenity).on(qAmenity.id.eq(qDamenity.id))
+                .where(qDamenity.dorm.id.eq(dormId))
+                .fetch();
     }
 }

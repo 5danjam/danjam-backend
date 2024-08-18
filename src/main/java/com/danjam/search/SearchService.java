@@ -1,5 +1,6 @@
 package com.danjam.search;
 
+import com.danjam.amenity.AmenityListDTO;
 import com.danjam.room.RoomDetailDTO;
 import com.danjam.search.querydsl.DormDto;
 import com.danjam.search.querydsl.FilterDto;
@@ -37,6 +38,10 @@ public class SearchService {
 
     public List<RoomDetailDTO> findAllRoom(SearchDto searchDto, Long dormId) {
         return searchRepo.findAllRoom(searchDto, dormId);
+    }
+
+    public List<AmenityListDTO> findAmenity(Long dormId) {
+        return searchRepo.findAmenity(dormId);
     }
 
 }
