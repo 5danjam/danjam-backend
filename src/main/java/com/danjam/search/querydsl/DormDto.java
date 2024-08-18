@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -33,5 +35,20 @@ public class DormDto {
         this.user = user;
         this.room = room;
         this.rate = rate;
+    }
+
+    public <T, E> DormDto(Long id, Object o, Object o1, Object o2, Object o3, Object o4, Object o5,
+                          CategoryDto categoryDto, UserDto userDto, ArrayList<E> es) {
+        this.id = id;
+        this.name = (String) o;
+        this.description = (String) o1;
+        this.contactNum = (String) o2;
+        this.city = (String) o3;
+        this.town = (String) o4;
+        this.address = (String) o5;
+        this.dcategory = (CategoryDto) o5;
+        this.user = (UserDto) o5;
+        this.room = (RoomDto) o5;
+        this.rate = (Double) o5;
     }
 }

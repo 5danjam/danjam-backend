@@ -9,6 +9,7 @@ import com.danjam.search.querydsl.SearchRepo;
 import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +25,10 @@ public class SearchService {
         return searchRepo.findList(searchDto);
     }
 
-    public List<DormDto> findAllList() {
-        return searchRepo.findAllList();
+    public Page<DormDto> findAllList(Pageable pageable) {
+        return searchRepo.findAllList(pageable);
     }
+
 
     public List<String> findByCity(String city) {
         return searchRepo.findByCity(city);

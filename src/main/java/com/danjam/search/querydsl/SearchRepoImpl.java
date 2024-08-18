@@ -20,6 +20,9 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.querydsl.core.types.Projections.list;
 import static com.querydsl.core.types.Projections.map;
@@ -115,14 +119,7 @@ public class SearchRepoImpl implements SearchRepo {
     }
 
     @Override
-    public List<DormDto> findAllList() {
-        JPAQuery<Long> subQuery = new JPAQuery<>();
-        subQuery
-                .select(subRoom.id)
-                .from(subRoom)
-                .where(subRoom.dorm.id.eq(qDorm.id))
-                .orderBy(subRoom.price.asc())
-                .limit(1);
+    public Page<DormDto> findAllList(Pageable pageable) {
         List<DormDto> dormDtoList = queryFactory
                 .select(Projections.constructor(DormDto.class,
                         qDorm.id,
@@ -154,11 +151,29 @@ public class SearchRepoImpl implements SearchRepo {
                 .join(qDorm.user, qUsers)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
                 .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
-                .where(qRoom.id.in(subQuery))
+                .where(qRoom.price.eq(groupByDorm))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
-        System.out.println(dormDtoList);
 
-        return removeDorm(dormDtoList);
+        long total = queryFactory
+                .select(qDorm.count())
+                .from(qDorm)
+                .fetchOne();
+
+        List<DormDto> resultList = removeDorm(dormDtoList);
+
+        int sizeDifference = pageable.getPageSize() - resultList.size();
+        if (sizeDifference > 0) {
+            for (int i = 0; i < sizeDifference; i++) {
+                resultList.add(new DormDto());
+            }
+        }
+
+        System.out.println("가져온 도미토리 수: " + dormDtoList.size());
+        System.out.println("resultList = " + resultList.size());
+
+        return new PageImpl<>(resultList, pageable, total);
     }
 
     // filter를 위한 townList
@@ -243,9 +258,24 @@ public class SearchRepoImpl implements SearchRepo {
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
                 .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
                 .where(groupBySearch)
+                .groupBy(qDorm.id,
+                        qDorm.name,
+                        qDorm.description,
+                        qDorm.contactNum,
+                        qDorm.city,
+                        qDorm.town,
+                        qDorm.address,
+                        qDcategory.id,
+                        qDcategory.name,
+                        qUsers.id,
+                        qUsers.name,
+                        qUsers.role,
+                        qRoom.id,
+                        qRoom.person,
+                        qRoom.price)
                 .fetch();
-
-        return removeDorm(dormDtoList);
+        return dormDtoList;
+//        return removeDorm(dormDtoList);
     }
 
     @Override
@@ -379,6 +409,7 @@ public class SearchRepoImpl implements SearchRepo {
                         subBooking.checkOut.between(checkIn, checkOut)
                 );
 
+        // 기존
         List<RoomDetailDTO> roomDtoList = queryFactory
                 .select(Projections.constructor(RoomDetailDTO.class,
                         qRoom.id,
@@ -430,14 +461,13 @@ public class SearchRepoImpl implements SearchRepo {
         return new ArrayList<>(roomDtoMap.values());
     }
 
-    @Override
     public List<AmenityListDTO> findAmenity(Long dormId) {
         return queryFactory
                 .select(Projections.constructor(AmenityListDTO.class,
                         qAmenity.id,
                         qAmenity.name))
                 .from(qAmenity)
-                .join(qDamenity).on(qAmenity.id.eq(qDamenity.id))
+                .join(qDamenity).on(qAmenity.id.eq(qDamenity.amenity.id))
                 .where(qDamenity.dorm.id.eq(dormId))
                 .fetch();
     }
