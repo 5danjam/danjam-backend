@@ -51,10 +51,10 @@ public class SearchRepoImpl implements SearchRepo {
     // 서브쿼리
     // 방 최저가 찾기
     JPQLQuery<Integer> groupByDorm = JPAExpressions
-            .select(subRoom.price.min())
-            .from(subRoom)
-            .where(subRoom.dorm.id.eq(qDorm.id))
-            .groupBy(subRoom.dorm.id);
+            .select(qRoom.price.min())
+            .from(qRoom)
+            .where(qRoom.dorm.id.eq(qDorm.id))
+            .groupBy(qRoom.dorm.id);
 
     // 호텔 기준으로 리뷰 평점 구하기
     JPQLQuery<Double> groupByReview = JPAExpressions
@@ -382,12 +382,12 @@ public class SearchRepoImpl implements SearchRepo {
                 .from(qRoom)
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
                 .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
+                .orderBy(qRoom.price.asc())
                 .where(
                         qRoom.id.notIn(groupByDate),
                         qRoom.dorm.id.eq(dormId),
                         qRoom.person.goe(person)
                         )
-                .orderBy(qRoom.price.asc())
                 .fetch();
 
         for (RoomDetailDTO roomDto : roomDtoList) {
