@@ -146,7 +146,6 @@ public class DormController {
             resultController.put("dormImages", dormImageURLs);  // URL 리스트를 resultController에 추가
 
             resultController.put("result", "success");
-//            List<RoomDetailDTO> rooms = ROOMSERVICE.getRoomByDormId(id);
             List<RoomDetailDTO> rooms = SEARCHSERVICE.findAllRoom(searchDto, id);
             System.out.println("rooms: " + rooms);
             resultController.put("rooms", rooms);

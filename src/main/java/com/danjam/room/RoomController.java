@@ -62,7 +62,6 @@ public class RoomController {
 
         try {
             List<RoomDetailDTO> rooms = ROOMSERVICE.getRoomByDormId(dormId);
-            System.out.println(rooms);
             response.put("result", "success");
             System.out.println(rooms);
             response.put("rooms", rooms);

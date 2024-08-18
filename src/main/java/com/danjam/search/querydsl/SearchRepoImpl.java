@@ -258,24 +258,9 @@ public class SearchRepoImpl implements SearchRepo {
                 .join(qRoom).on(qDorm.id.eq(qRoom.dorm.id))
                 .leftJoin(qRoomImg).on(qRoom.id.eq(qRoomImg.room.id))
                 .where(groupBySearch)
-                .groupBy(qDorm.id,
-                        qDorm.name,
-                        qDorm.description,
-                        qDorm.contactNum,
-                        qDorm.city,
-                        qDorm.town,
-                        qDorm.address,
-                        qDcategory.id,
-                        qDcategory.name,
-                        qUsers.id,
-                        qUsers.name,
-                        qUsers.role,
-                        qRoom.id,
-                        qRoom.person,
-                        qRoom.price)
                 .fetch();
-        return dormDtoList;
-//        return removeDorm(dormDtoList);
+
+        return removeDorm(dormDtoList);
     }
 
     @Override
